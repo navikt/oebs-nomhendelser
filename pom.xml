@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.3.7</version>
         <relativePath/>
     </parent>
 
@@ -67,19 +67,30 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>8.0</version>
-            <exclusions>
+            <!--<exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-core</artifactId>
                 </exclusion>
-            </exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback.access</groupId>
+                    <artifactId>logback-access-common</artifactId>
+                </exclusion>
+            </exclusions>-->
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>1.5.16</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback.access</groupId>
+            <artifactId>logback-access-common</artifactId>
+            <version>2.0.6</version>
+        </dependency>-->
+
 
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
