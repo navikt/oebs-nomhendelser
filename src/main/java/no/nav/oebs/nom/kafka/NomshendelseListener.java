@@ -68,9 +68,9 @@ public class NomshendelseListener extends BaseHendelseListener {
 			log.error("Mottatt skjermingshendelse kan ikke behandles og må rulles tilbake på topic", e);
 			throw e;
 		} finally {
-			if (acceptedByFilter || kafkaFilterConfig.isDebugMode()) {
+			//if (acceptedByFilter || kafkaFilterConfig.isDebugMode()) {
 				logToNomsLogg(korrelasjonId, status, startTime, hendelseAsJson, consumerRecord, exception);
-			}
+			//}
 
 			MdcOperations.remove(MdcOperations.MDC_CORRELATION_ID);
 		}
