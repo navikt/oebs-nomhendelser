@@ -1,56 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
-    <!-- Properties>
-        <Property name="profile">${env:SPRING_PROFILES_ACTIVE}</Property>
-    </Properties -->
 
-    <!-- Define stack trace filters -->
-    <Filter type="StackTraceElementFilter">
-        <Filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>TRACE</level>
-        </Filter>
-        <Packages>java.util.concurrent, org.apache.tomcat, org.apache.coyote, org.apache.catalina, org.springframework.web</Packages>
-        <OnMatch>DENY</OnMatch>
-        <OnMismatch>NEUTRAL</OnMismatch>
-    </Filter>
+<!DOCTYPE configuration>
 
-    <!-- JSON Console Appender -->
-    <Appenders>
-        <Console name="stdout_json" target="SYSTEM_OUT">
-            <JSONLayout complete="false"
-                        eventEnder=""
-                        compact="true"
-                        stacktraceElementFilterRef="stackTraceFilter"
-                        additionalFields="threadName=%thread, level=%level, loggerName=%logger, message=%message">
-                <KeyValuePair key="timestamp" value="%date"/>
-                <KeyValuePair key="thread" value="%thread"/>
-                <KeyValuePair key="level" value="%level"/>
-                <KeyValuePair key="logger" value="%logger"/>
-                <KeyValuePair key="message" value="%message"/>
-                <KeyValuePair key="stacktrace" value="%exception"/>
-            </JSONLayout>
-        </Console>
-    </Appenders>
+<configuration>
+    <appender name="stdout_json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                <exclude>java\.util\.concurrent\..*</exclude>
+                <exclude>org\.apache\.tomcat\..*</exclude>
+                <exclude>org\.apache\.coyote\..*</exclude>
+                <exclude>org\.apache\.catalina\..*</exclude>
+                <exclude>org\.springframework\.web\..*</exclude>
+            </throwableConverter>
+        </encoder>
+    </appender>
 
-    <!-- Conditional logging based on profile -->
-    <Loggers>
-        <!-- For 'nais' profile -->
-        <if condition="${profile} == 'nais'">
-            <then>
-                <Root level="info">
-                    <AppenderRef ref="stdout_json"/>
-                </Root>
-            </then>
-        </if>
+    <springProfile name="nais">
+        <root level="INFO">
+            <appender-ref ref="stdout_json" />
+        </root>
+    </springProfile>
 
-        <!-- For 'local' profile -->
-        <if condition="${profile} == 'local'">
-            <then>
-                <!-- Include Spring Boot's base Log4j2 configuration -->
-                <include resource="org/springframework/boot/logging/logback/base.xml"/>
-                <!-- Set logger level for specific package -->
-                <Logger name="no.nav.oebs.nom" level="info"/>
-            </then>
-        </if>
-    </Loggers>
-</Configuration>
+    <springProfile name="local">
+        <include resource="org/springframework/boot/logging/logback/base.xml" />
+        <logger name="no.nav.oebs.nom" level="INFO" />
+    </springProfile>
+</configuration>
