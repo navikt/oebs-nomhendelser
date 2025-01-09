@@ -53,26 +53,26 @@ public class NomshendelseService extends NomshendelseServiceBase {
 	public void behandleHendelse(NomshendelseDto mottattHendelse) {
 		// Persisterer først hendelsen. Formålet er å sjekke at databasen er tilgjengelig, ellers skal hendelsen rulles
 		// tilbake på topicen. Må gjøres før try-catchen.
-		NomsHendelse skjermingshendelse = createAndSaveNomsHendelseEntity(mottattHendelse);
+		NomsHendelse nomshendelse = createAndSaveNomsHendelseEntity(mottattHendelse);
 
 		try {
-			if (isNyHendelseDuplikat(skjermingshendelse)) {
-				skjermingshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
+			if (isNyHendelseDuplikat(nomshendelse)) {
+				nomshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
 			} else {
-				addHendelseArenaToEntity(skjermingshendelse);
+				addHendelseOebsToEntity(nomshendelse);
 
 				// hendelseFacadeRepository.mottaSkjermingshendelse(skjermingshendelse.getHendelseArena());
 
-				skjermingshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
+				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
 			}
 		} catch (Exception e) {
-			skjermingshendelse.setStatus(NomsHendelse.STATUS_RETRY);
-			skjermingshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());
-			skjermingshendelse.setRetryTidspunkt(getNextRetryTidspunkt(skjermingshendelse));
-			skjermingshendelse.setFeilinformasjon(LoggingUtils.formatExceptionAsString(e));
+			nomshendelse.setStatus(NomsHendelse.STATUS_RETRY);
+			nomshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());
+			nomshendelse.setRetryTidspunkt(getNextRetryTidspunkt(nomshendelse));
+			nomshendelse.setFeilinformasjon(LoggingUtils.formatExceptionAsString(e));
 
 			log.warn(String.format("Feilet under behandling av skjermingshendelse; id=%d, retrytidspunkt=%s, cause=%s",
-					skjermingshendelse.getId(), skjermingshendelse.getRetryTidspunkt(), e.getMessage()), e);
+					nomshendelse.getId(), nomshendelse.getRetryTidspunkt(), e.getMessage()), e);
 
 			throw new HendelseBehandlingException(e);
 		}

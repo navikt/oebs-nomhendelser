@@ -21,7 +21,7 @@ public class NomshendelseServiceBase extends HendelseServiceBase {
 	/**
 	 * Legger til hendelseArena-feltet på entiteten. Dette er hendelsen på JSON-format som overføres til Arena.
 	 */
-	protected void addHendelseArenaToEntity(NomsHendelse entity) throws JsonProcessingException {
+	protected void addHendelseOebsToEntity(NomsHendelse entity) throws JsonProcessingException {
 		boolean status = Boolean.parseBoolean(entity.getHendelse());
 
 		NomshendelseOebs hendelseOebs = NomshendelseOebs.builder() //

@@ -25,10 +25,10 @@ public class NomshendelseListener extends BaseHendelseListener {
 
 	//private NomshendelseFilterService skjermingshendelseFilterService;
 
-	public NomshendelseListener(KafkaFilterConfig kafkaFilterConfig, NomsLoggRepository kallLoggRepository,
+	public NomshendelseListener(KafkaFilterConfig kafkaFilterConfig, NomsLoggRepository nomkallLoggRepository,
 			NomshendelseService nomshendelseService) {
-		super(kallLoggRepository);
-		// this.kafkaFilterConfig = kafkaFilterConfig;
+		super(nomkallLoggRepository);
+		this.kafkaFilterConfig = kafkaFilterConfig;
 		this.nomshendelseService = nomshendelseService;
 	}
 
@@ -55,9 +55,9 @@ public class NomshendelseListener extends BaseHendelseListener {
 			NomshendelseDto nomshendelseDto = createNomshendelseDto(hendelseAsJson, consumerRecord);
 
 			/*acceptedByFilter = skjermingshendelseFilterService.isSkjermingshendelseForArena(skjermingshendelseDto);
-			if (acceptedByFilter) {
-				skjermingshendelseService.behandleHendelse(skjermingshendelseDto);
-			}*/
+			if (acceptedByFilter) { */
+				nomshendelseService.behandleHendelse(nomshendelseDto);
+			//}
 		} catch (HendelseBehandlingException e) {
 			status = STATUS_ERROR;
 			exception = e;
