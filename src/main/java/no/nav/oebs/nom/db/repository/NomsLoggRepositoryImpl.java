@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import no.nav.oebs.nom.db.entity.NomsLogg;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,7 +19,8 @@ public class NomsLoggRepositoryImpl implements NomsLoggRepositoryCustom {
 
 	@Override
 	public void pingKallLogg() {
-		entityManager.createQuery("SELECT k.id FROM NomsLogg k WHERE kall_logg_id = 0", NomsLogg.class) //
+
+		entityManager.createQuery("SELECT n.id FROM NomsLogg n WHERE n.korrelasjonId = null", NomsLogg.class)
 				.getResultList();
 	}
 }
