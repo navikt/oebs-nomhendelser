@@ -16,11 +16,21 @@
         </encoder>
     </appender>
 
+<!--
     <springProfile name="nais">
         <root level="INFO">
             <appender-ref ref="stdout_json" />
         </root>
     </springProfile>
+-->
+
+    <springProfile name="nais">
+        <root>
+            <level value="INFO" />
+            <appender-ref ref="stdout_json" />
+        </root>
+    </springProfile>
+
 
     <springProfile name="local">
         <include resource="org/springframework/boot/logging/logback/base.xml" />
