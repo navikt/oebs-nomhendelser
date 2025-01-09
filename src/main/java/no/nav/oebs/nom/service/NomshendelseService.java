@@ -23,7 +23,7 @@ import no.nav.oebs.nom.kafka.nomshendelse.model.*;
 @Service
 public class NomshendelseService extends NomshendelseServiceBase {
 
-	private NomshendelseRepository hendelseRepository;
+	NomshendelseRepository hendelseRepository;
 
 	//private SkjermingshendelseFacadeRepository hendelseFacadeRepository;
 

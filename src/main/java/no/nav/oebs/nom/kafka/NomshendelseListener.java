@@ -19,9 +19,8 @@ import no.nav.oebs.nom.service.NomshendelseService;
 @Component
 public class NomshendelseListener extends BaseHendelseListener {
 
-	private KafkaFilterConfig kafkaFilterConfig;
-
-	private NomshendelseService nomshendelseService;
+	KafkaFilterConfig kafkaFilterConfig;
+	NomshendelseService nomshendelseService;
 
 	//private NomshendelseFilterService skjermingshendelseFilterService;
 
@@ -49,7 +48,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 		String korrelasjonId = generateAndSetCorrelationId();
 		int status = STATUS_OK;
 		Exception exception = null;
-		boolean acceptedByFilter = false;
+		//boolean acceptedByFilter = false;
 
 		try {
 			NomshendelseDto nomshendelseDto = createNomshendelseDto(hendelseAsJson, consumerRecord);

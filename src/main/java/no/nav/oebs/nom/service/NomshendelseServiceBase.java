@@ -11,7 +11,7 @@ import no.nav.oebs.nom.service.model.NomshendelseOebs;
  */
 public class NomshendelseServiceBase extends HendelseServiceBase {
 
-	private ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
 	public NomshendelseServiceBase(ServiceConfig serviceConfig, ObjectMapper objectMapper) {
 		super(serviceConfig);
