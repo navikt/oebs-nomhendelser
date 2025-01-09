@@ -17,7 +17,7 @@ public class NomsLoggRepositoryImpl implements NomsLoggRepositoryCustom {
 
 	@Override
 	public void pingKallLogg() {
-		entityManager.createQuery("SELECT k.id FROM NomsLogg k WHERE k.id = null", NomsLogg.class) //
+		entityManager.createQuery("SELECT k.id FROM NomsLogg k WHERE id = null", NomsLogg.class) //
 				.getResultList();
 	}
 }
