@@ -2,7 +2,7 @@ package no.nav.oebs.nom.service;
 
 import java.util.List;
 
-import no.nav.oebs.nom.db.repository.NomshendelsesFacadeRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
-//import no.nav.oebs.nom.db.repository.NomshendelseFacadeRepository;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
 import no.nav.oebs.nom.kafka.nomshendelse.model.*;

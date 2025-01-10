@@ -20,15 +20,15 @@ import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 public class NomshendelseRetryService extends NomshendelseServiceBase
 		implements HendelseRetryService<NomsHendelse> {
 
-	private NomshendelseRepository hendelseRepository;
+	private final NomshendelseRepository nomshendelseRepository;
 
 //	private NomshendelseFacadeRepository hendelseFacadeRepository;
     //private OebsLoggFacadeRepository oebsLoggFacadeRepository;
 
-	public NomshendelseRetryService(ServiceConfig serviceConfig, NomshendelseRepository hendelseRepository,
+	public NomshendelseRetryService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
 			ObjectMapper objectMapper) {
 		super(serviceConfig, objectMapper);
-		this.hendelseRepository = hendelseRepository;
+		this.nomshendelseRepository = nomshendelseRepository;
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 	 * dersom status for nyere hendelser er DUPLIKAT; da skal hendelsen under retry ikke settes til ERSTATTET.
 	 */
 	private boolean isRetryHendelseErstattet(NomsHendelse nomshendelse) {
-		return !hendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(nomshendelse.getHendelseFodselsnr(),
+		return !nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(nomshendelse.getHendelseFodselsnr(),
 				nomshendelse.getId(), List.of(NomsHendelse.STATUS_DUPLIKAT)).isEmpty();
 	}
 }
