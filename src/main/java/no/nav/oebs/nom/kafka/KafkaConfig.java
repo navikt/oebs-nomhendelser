@@ -41,7 +41,7 @@ public class KafkaConfig {
 
 
 	/**
-	 * Kafka listener container factory for skjermingshendelser. Se {@link #kafkaNomshendelseListenerContainerFactory} for en
+	 * Kafka listener container factory for nomshendelser. Se {@link #kafkaNomshendelseListenerContainerFactory} for en
 	 * detaljert beskrivelse som også gjelder denne container factoryen.
 	 */
 

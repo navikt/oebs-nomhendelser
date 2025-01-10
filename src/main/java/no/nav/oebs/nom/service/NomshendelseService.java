@@ -2,6 +2,7 @@ package no.nav.oebs.nom.service;
 
 import java.util.List;
 
+import no.nav.oebs.nom.db.repository.NomshendelsesFacadeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,26 +18,26 @@ import no.nav.oebs.nom.exception.HendelseBehandlingException;
 import no.nav.oebs.nom.kafka.nomshendelse.model.*;
 
 /**
- * Serviceklasse som behandler mottatte skjermingshendelser fra Kafka.
+ * Serviceklasse som behandler mottatte nomshendelser fra Kafka.
  */
 @Slf4j
 @Service
 public class NomshendelseService extends NomshendelseServiceBase {
 
-	NomshendelseRepository hendelseRepository;
+	NomshendelseRepository nomshendelseRepository;
 
-	//private SkjermingshendelseFacadeRepository hendelseFacadeRepository;
+	//private NomshendelsesFacadeRepository nomshendelsesFacadeRepository;
 
-	public NomshendelseService(ServiceConfig serviceConfig, NomshendelseRepository hendelseRepository,
+	public NomshendelseService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
 			ObjectMapper objectMapper) {
 		super(serviceConfig, objectMapper);
-		this.hendelseRepository = hendelseRepository;
+		this.nomshendelseRepository = nomshendelseRepository;
 	}
 
 	/**
-	 * Behandler mottatt skjermingshendelse.
+	 * Behandler mottatt nomshendelse.
 	 * <p>
-	 * Status som lagres i skjermingshendelse-tabellen:
+	 * Status som lagres i nomshendelse-tabellen:
 	 * <ul>
 	 * <li>BEHANDLET - ved normal fullført behandling av hendelsen.</li>
 	 * <li>RETRY - dersom det oppstår feil under behandling av hendelsen.</li>
@@ -55,15 +56,18 @@ public class NomshendelseService extends NomshendelseServiceBase {
 		// tilbake på topicen. Må gjøres før try-catchen.
 		NomsHendelse nomshendelse = createAndSaveNomsHendelseEntity(mottattHendelse);
 
+		log.info(nomshendelse.getHendelseId());
+
 		try {
 			if (isNyHendelseDuplikat(nomshendelse)) {
 				nomshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
 			} else {
 				addHendelseOebsToEntity(nomshendelse);
 
-				// hendelseFacadeRepository.mottaSkjermingshendelse(skjermingshendelse.getHendelseArena());
+				//nomshendelsesFacadeRepository.mottaNomshendelse(nomshendelse.getHendelseOebs());
 
 				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
+
 			}
 		} catch (Exception e) {
 			nomshendelse.setStatus(NomsHendelse.STATUS_RETRY);
@@ -71,7 +75,7 @@ public class NomshendelseService extends NomshendelseServiceBase {
 			nomshendelse.setRetryTidspunkt(getNextRetryTidspunkt(nomshendelse));
 			nomshendelse.setFeilinformasjon(LoggingUtils.formatExceptionAsString(e));
 
-			log.warn(String.format("Feilet under behandling av skjermingshendelse; id=%d, retrytidspunkt=%s, cause=%s",
+			log.warn(String.format("Feilet under behandling av nomshendelse; id=%d, retrytidspunkt=%s, cause=%s",
 					nomshendelse.getId(), nomshendelse.getRetryTidspunkt(), e.getMessage()), e);
 
 			throw new HendelseBehandlingException(e);
@@ -91,15 +95,15 @@ public class NomshendelseService extends NomshendelseServiceBase {
 				.hendelse(mottattHendelse.getHendelseAsJson()) //
 				.build();
 
-		return hendelseRepository.save(hendelse);
+		return nomshendelseRepository.save(hendelse);
 	}
 
 	/**
-	 * Sjekker om en ny skjermingshendelse er duplikat av tidligere mottatte hendelser. Sjekken gjøres på hendelse ID, samt at
+	 * Sjekker om en ny nomshendelse er duplikat av tidligere mottatte hendelser. Sjekken gjøres på hendelse ID, samt at
 	 * status ikke må være NY.
 	 */
 	private boolean isNyHendelseDuplikat(NomsHendelse nomsHendelse) {
-		return !hendelseRepository
+		return !nomshendelseRepository
 				.findByHendelseIdAndStatusNotIn(nomsHendelse.getHendelseId(), List.of(NomsHendelse.STATUS_NY))
 				.isEmpty();
 	}

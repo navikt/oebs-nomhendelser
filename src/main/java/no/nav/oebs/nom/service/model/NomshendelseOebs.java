@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Klasse som representerer JSON-dataene i en skjermingshendelse som sendes til Arena.
+ * Klasse som representerer JSON-dataene i en nomshendelse som sendes til Oebs.
  */
 @Builder
 @NoArgsConstructor

@@ -44,4 +44,7 @@ public class NomsHendelse extends BaseHendelse {
 
 	@Column(name = "HENDELSE")
 	private String hendelse;
+
+	@Column(name = "HENDELSE_OEBS")
+	private String hendelseOebs;
 }

@@ -13,21 +13,17 @@ import no.nav.oebs.nom.kafka.nomshendelse.model.NomshendelseDto;
 import no.nav.oebs.nom.service.NomshendelseService;
 
 /**
- * Kafka-listener som mottar skjermingshendelser fra topicen.
+ * Kafka-listener som mottar nomshendelser fra topicen.
  */
 @Slf4j
 @Component
 public class NomshendelseListener extends BaseHendelseListener {
 
-	KafkaFilterConfig kafkaFilterConfig;
+	//KafkaFilterConfig kafkaFilterConfig;
 	NomshendelseService nomshendelseService;
 
-	//private NomshendelseFilterService skjermingshendelseFilterService;
-
-	public NomshendelseListener(KafkaFilterConfig kafkaFilterConfig, NomsLoggRepository nomkallLoggRepository,
-			NomshendelseService nomshendelseService) {
-		super(nomkallLoggRepository);
-		this.kafkaFilterConfig = kafkaFilterConfig;
+	public NomshendelseListener(NomsLoggRepository nomsLoggRepository, NomshendelseService nomshendelseService) {
+		super(nomsLoggRepository);
 		this.nomshendelseService = nomshendelseService;
 	}
 
@@ -53,7 +49,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 		try {
 			NomshendelseDto nomshendelseDto = createNomshendelseDto(hendelseAsJson, consumerRecord);
 
-			/*acceptedByFilter = skjermingshendelseFilterService.isSkjermingshendelseForArena(skjermingshendelseDto);
+			/*acceptedByFilter = nomshendelseFilterService.isNomshendelseForOebs(nomshendelseDto);
 			if (acceptedByFilter) { */
 				nomshendelseService.behandleHendelse(nomshendelseDto);
 			//}
@@ -64,7 +60,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 			status = STATUS_ERROR;
 			exception = e;
 
-			log.error("Mottatt skjermingshendelse kan ikke behandles og må rulles tilbake på topic", e);
+			log.error("Mottatt nomshendelse kan ikke behandles og må rulles tilbake på topic", e);
 			throw e;
 		} finally {
 			//if (acceptedByFilter || kafkaFilterConfig.isDebugMode()) {
@@ -85,7 +81,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 	}
 
 	/**
-	 * Returnerer en hendelse ID for meldingen. Skjermingshendelser har ingen unik id i selve meldingen. Det opprettes derfor en
+	 * Returnerer en hendelse ID for meldingen. Nomshendelser har ingen unik id i selve meldingen. Det opprettes derfor en
 	 * unik id basert på topic-, partisjon- og offset-verdiene mottatt fra Kafka.
 	 */
 	private String createHendelseId(ConsumerRecord<?, ?> consumerRecord) {

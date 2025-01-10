@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Klasse for en intern representasjon av en mottatt skjermingshendelse-melding fra Kafka.
+ * Klasse for en intern representasjon av en mottatt nomshendelse-melding fra Kafka.
  */
 @Builder
 @NoArgsConstructor

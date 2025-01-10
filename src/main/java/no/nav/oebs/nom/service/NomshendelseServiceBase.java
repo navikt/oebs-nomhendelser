@@ -7,7 +7,7 @@ import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.service.model.NomshendelseOebs;
 
 /**
- * Basisklasse som arves av skjermingshendelsetjenestene for bruk av felles funksjonalitet.
+ * Basisklasse som arves av nomshendelsetjenestene for bruk av felles funksjonalitet.
  */
 public class NomshendelseServiceBase extends HendelseServiceBase {
 
@@ -19,7 +19,7 @@ public class NomshendelseServiceBase extends HendelseServiceBase {
 	}
 
 	/**
-	 * Legger til hendelseArena-feltet på entiteten. Dette er hendelsen på JSON-format som overføres til Arena.
+	 * Legger til hendelseOebs-feltet på entiteten. Dette er hendelsen på JSON-format som overføres til Oebs.
 	 */
 	protected void addHendelseOebsToEntity(NomsHendelse entity) throws JsonProcessingException {
 		boolean status = Boolean.parseBoolean(entity.getHendelse());

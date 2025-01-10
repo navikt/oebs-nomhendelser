@@ -13,7 +13,7 @@ import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 
 /**
- * Serviceklasse som rekjører skjermingshendelser som har feilet.
+ * Serviceklasse som rekjører nomshendelser som har feilet.
  */
 @Slf4j
 @Service
@@ -22,7 +22,7 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 
 	private NomshendelseRepository hendelseRepository;
 
-//	private SkjermingshendelseFacadeRepository hendelseFacadeRepository;
+//	private NomshendelseFacadeRepository hendelseFacadeRepository;
     //private OebsLoggFacadeRepository oebsLoggFacadeRepository;
 
 	public NomshendelseRetryService(ServiceConfig serviceConfig, NomshendelseRepository hendelseRepository,
@@ -55,14 +55,14 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 					addHendelseOebsToEntity(hendelse);
 				}
 */
-				//hendelseFacadeRepository.mottaSkjermingshendelse(hendelse.getHendelseArena());
+				//hendelseFacadeRepository.mottaNomshendelse(hendelse.getHendelseOebs());
 
 				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
 			}
 		} catch (Exception e) {
 			if (nomshendelse.getRetryTeller() <= 0) {
 				log.error(String.format(
-						"Alle rekjøringsforsøk av skjermingshendelse har feilet og status er endret til FEILET; id=%d, cause=%s",
+						"Alle rekjøringsforsøk av nomshendelse har feilet og status er endret til FEILET; id=%d, cause=%s",
 						nomshendelse.getId(), e.getMessage()), e);
 
 				nomshendelse.setStatus(NomsHendelse.STATUS_FEILET);
@@ -71,7 +71,7 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 			} else {
 				nomshendelse.setRetryTidspunkt(getNextRetryTidspunkt(nomshendelse));
 
-				log.warn(String.format("Feilet under rekjøring av skjermingshendelse; id=%d, neste retrytidspunkt=%s, cause=%s",
+				log.warn(String.format("Feilet under rekjøring av nomshendelse; id=%d, neste retrytidspunkt=%s, cause=%s",
 						nomshendelse.getId(), nomshendelse.getRetryTidspunkt(), e.getMessage()), e);
 			}
 
