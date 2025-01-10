@@ -24,11 +24,11 @@ public class NomshendelseServiceBase extends HendelseServiceBase {
 	protected void addHendelseOebsToEntity(NomsHendelse entity) throws JsonProcessingException {
 		boolean status = Boolean.parseBoolean(entity.getHendelse());
 
-		NomshendelseOebs hendelseOebs = NomshendelseOebs.builder() //
+		NomshendelseOebs nomshendelseOebs = NomshendelseOebs.builder() //
 				.fodselsnr(entity.getHendelseFodselsnr()) //
 				.status(status) //
 				.build();
 
-		entity.setHendelse(objectMapper.writeValueAsString(hendelseOebs));
+		entity.setHendelse(objectMapper.writeValueAsString(nomshendelseOebs));
 	}
 }

@@ -51,12 +51,6 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 				nomshendelse.setKorrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID));
 				nomshendelse.decrementRetryTeller();
 
-				/*if (hendelse.getHendelseOebs() == null) {
-					addHendelseOebsToEntity(hendelse);
-				}
-*/
-				//hendelseFacadeRepository.mottaNomshendelse(hendelse.getHendelseOebs());
-
 				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
 			}
 		} catch (Exception e) {
@@ -67,7 +61,6 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 
 				nomshendelse.setStatus(NomsHendelse.STATUS_FEILET);
 
-				//logNomsHendelseError(hendelse);
 			} else {
 				nomshendelse.setRetryTidspunkt(getNextRetryTidspunkt(nomshendelse));
 

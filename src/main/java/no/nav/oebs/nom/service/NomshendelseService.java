@@ -51,6 +51,7 @@ public class NomshendelseService extends NomshendelseServiceBase {
 	 */
 	@Transactional(noRollbackFor = HendelseBehandlingException.class)
 	public void behandleHendelse(NomshendelseDto mottattHendelse) {
+
 		// Persisterer først hendelsen. Formålet er å sjekke at databasen er tilgjengelig, ellers skal hendelsen rulles
 		// tilbake på topicen. Må gjøres før try-catchen.
 		NomsHendelse nomshendelse = createAndSaveNomsHendelseEntity(mottattHendelse);
@@ -62,8 +63,6 @@ public class NomshendelseService extends NomshendelseServiceBase {
 				nomshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
 			} else {
 				addHendelseOebsToEntity(nomshendelse);
-
-				//nomshendelsesFacadeRepository.mottaNomshendelse(nomshendelse.getHendelseOebs());
 
 				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
 

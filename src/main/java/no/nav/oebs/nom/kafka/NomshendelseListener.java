@@ -49,10 +49,8 @@ public class NomshendelseListener extends BaseHendelseListener {
 		try {
 			NomshendelseDto nomshendelseDto = createNomshendelseDto(hendelseAsJson, consumerRecord);
 
-			/*acceptedByFilter = nomshendelseFilterService.isNomshendelseForOebs(nomshendelseDto);
-			if (acceptedByFilter) { */
 				nomshendelseService.behandleHendelse(nomshendelseDto);
-			//}
+
 		} catch (HendelseBehandlingException e) {
 			status = STATUS_ERROR;
 			exception = e;
@@ -63,10 +61,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 			log.error("Mottatt nomshendelse kan ikke behandles og må rulles tilbake på topic", e);
 			throw e;
 		} finally {
-			//if (acceptedByFilter || kafkaFilterConfig.isDebugMode()) {
-				logToNomsLogg(korrelasjonId, status, startTime, hendelseAsJson, consumerRecord, exception);
-			//}
-
+			logToNomsLogg(korrelasjonId, status, startTime, hendelseAsJson, consumerRecord, exception);
 			MdcOperations.remove(MdcOperations.MDC_CORRELATION_ID);
 		}
 	}
