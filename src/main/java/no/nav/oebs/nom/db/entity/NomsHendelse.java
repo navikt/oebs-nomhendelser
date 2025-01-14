@@ -24,13 +24,13 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @Getter
 @Setter
-@Table(name = "XXRTV_NOMSHENDELSE")
+@Table(name = "XXRTV_NOM_HENDELSE")
 public class NomsHendelse extends BaseHendelse {
 
 	@Id
 	@SequenceGenerator(name = "xxrtv_nom_seq", sequenceName = "xxrtv_nom_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "xxrtv_nom_seq")
-	@Column(name = "NOMSHENDELSE_ID")
+	@Column(name = "NOM_HENDELSE_ID")
 	private Long id;
 
 	@Column(name = "HENDELSE_ID")

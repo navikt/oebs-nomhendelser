@@ -4,9 +4,10 @@
 -- Kildefil          : v1_nomsshendelse.sql
 -- Beskrivelse       : Tabell med nomshendelser som er konsumert fra Kafka.
 -------------------------------------------------------------------------------
-CREATE TABLE xxrtv.xxrtv_nomshendelse( nomshendelse_id NUMBER  NOT NULL
+CREATE TABLE xxrtv.xxrtv_nom_hendelse( nom_hendelse_id NUMBER  NOT NULL
     , korrelasjon_id                   VARCHAR2(50)   NOT NULL
     , status                           VARCHAR2(20)   NOT NULL
+    , status_beskrivelse               VARCHAR2(20)
     , retry_teller                     NUMBER
     , retry_tidspunkt                  TIMESTAMP(9)
     , hendelse_id                      VARCHAR2(100)
@@ -15,7 +16,8 @@ CREATE TABLE xxrtv.xxrtv_nomshendelse( nomshendelse_id NUMBER  NOT NULL
     , hendelse                         CLOB
     , hendelse_oebs                    CLOB
     , feilinformasjon                  CLOB
-    , CONSTRAINT nom_hendelse_pk PRIMARY KEY(nomshendelse_id) );
+    , meldingstype                     VARCHAR2(20)
+    , CONSTRAINT nom_hendelse_pk PRIMARY KEY(nom_hendelse_id) );
 
 -- Legg til sekvens
 CREATE SEQUENCE xxrtv_nom_seq
@@ -24,22 +26,24 @@ CREATE SEQUENCE xxrtv_nom_seq
 
 -- Legg til trigger for å sette primærnøkkel
 CREATE OR REPLACE TRIGGER nom_hen_pk_trg
-  BEFORE INSERT ON xxrtv.xxrtv_nomshendelse
+  BEFORE INSERT ON xxrtv.xxrtv_nom_hendelse
   FOR EACH ROW
 BEGIN
-  IF :new.nomshendelse_id IS NULL THEN
+  IF :new.nom_hendelse_id IS NULL THEN
 SELECT xxrtv_nom_seq.NEXTVAL
-INTO   :new.nomshendelse_id
+INTO   :new.nom_hendelse_id
 FROM   DUAL;
 END IF;
 END nom_hen_pk_trg;
 /
 
-CREATE INDEX nom_hendelse_idx_u1 ON xxrtv.xxrtv_nomshendelse (korrelasjon_id);
-CREATE INDEX nom_hendelse_idx_u2 ON xxrtv.xxrtv_nomshendelse (status);
-CREATE INDEX nom_hendelse_idx_u3 ON xxrtv.xxrtv_nomshendelse (hendelse_id);
-CREATE INDEX nom_hendelse_idx_u4 ON xxrtv.xxrtv_nomshendelse (hendelse_fodselsnr);
-CREATE INDEX nom_hendelse_idx_u5 ON xxrtv.xxrtv_nomshendelse (hendelse_opprettet);
+CREATE INDEX nom_hendelse_idx_u1 ON xxrtv.xxrtv_nom_hendelse (korrelasjon_id);
+CREATE INDEX nom_hendelse_idx_u2 ON xxrtv.xxrtv_nom_hendelse (status);
+CREATE INDEX nom_hendelse_idx_u3 ON xxrtv.xxrtv_nom_hendelse (hendelse_id);
+CREATE INDEX nom_hendelse_idx_u4 ON xxrtv.xxrtv_nom_hendelse (hendelse_fodselsnr);
+CREATE INDEX nom_hendelse_idx_u5 ON xxrtv.xxrtv_nom_hendelse (hendelse_opprettet);
+
+create synonym xxrtv_nom_hendelse for xxrtv.xxrtv_nom_hendelse;
 
 drop TRIGGER nom_hendelse_trg;
 
