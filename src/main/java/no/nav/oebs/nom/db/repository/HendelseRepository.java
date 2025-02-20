@@ -15,12 +15,8 @@ import no.nav.oebs.nom.db.entity.BaseHendelse;
 
 /**
  * Basisrepository for hendelsetabeller. Arves av aktuelle hendelserepositories.
- *
- * @param <T>
- *            Hendelsetypen.
- * @param <ID>
- *            ID-typen (primærnøkkel).
- */
+ **/
+
 @NoRepositoryBean
 public interface HendelseRepository<T extends BaseHendelse, ID> extends JpaRepository<T, ID> {
 
@@ -29,18 +25,8 @@ public interface HendelseRepository<T extends BaseHendelse, ID> extends JpaRepos
 	/**
 	 * Finner og låser alle hendelser som skal rekjøres. Dette er hendelser med retry-status der retry-tidspunktet er nådd
 	 * (eller har passert).
-	 * <p>
-	 * For å unngå samtidighetskonflikter benyttes en låsemekanisme:
-	 * <ul>
-	 * <li>Låsemodus PESSIMISTIC_WRITE - gir eksklusiv lås på radene som leses opp.</li>
-	 * <li>Hint SKIP_LOCKED - hopper over rader som allerede er låst.</li>
-	 * <li>Hint FOLLOW_ON_LOCKING - benyttes fordi Oracle oppfører seg litt annereledes enn en del andre databaser: <i>Oracle
-	 * uses MVCC (Multiversion Concurrency Control) so Readers don't block Writers and Writers don't block Readers. Even if you
-	 * acquire a row-level lock with Oracle, and you modify that row without committing, other transactions can still read the
-	 * last committed value</i>.</li>
-	 * </ul>
 	 *
-	 * @return En liste med alle hendelser som skal rekjøres.
+	 * For å unngå samtidighetskonflikter benyttes låsemekanisme SKIP_LOCKED
 	 */
 	@QueryHints(value = { @QueryHint(name = "jakarta.persistence.lock.timeout", value = SKIP_LOCKED),
 			@QueryHint(name = AvailableHints.HINT_FOLLOW_ON_LOCKING, value = "false") })

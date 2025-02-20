@@ -72,6 +72,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 				.hendelseTimestamp(epochToLocalDateTime(consumerRecord.timestamp())) //
 				.fodselsnr(getValueAsString(consumerRecord.key())) //
 				.hendelseAsJson(hendelseAsJson) //
+				// .fodselsnr((consumerRecord.offset())
 				.build();
 	}
 
