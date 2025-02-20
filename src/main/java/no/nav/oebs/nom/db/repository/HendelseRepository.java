@@ -25,7 +25,6 @@ public interface HendelseRepository<T extends BaseHendelse, ID> extends JpaRepos
 	/**
 	 * Finner og låser alle hendelser som skal rekjøres. Dette er hendelser med retry-status der retry-tidspunktet er nådd
 	 * (eller har passert).
-	 *
 	 * For å unngå samtidighetskonflikter benyttes låsemekanisme SKIP_LOCKED
 	 */
 	@QueryHints(value = { @QueryHint(name = "jakarta.persistence.lock.timeout", value = SKIP_LOCKED),
