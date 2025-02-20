@@ -8,7 +8,6 @@ COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT ["java","-jar","app.jar"]
 
-COPY src/main/scripts/init.sh /init-scripts/init.sh
 
 
 
