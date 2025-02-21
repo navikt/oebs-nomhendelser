@@ -28,8 +28,8 @@ import java.time.LocalDateTime;
 public class NomsHendelse extends BaseHendelse {
 
 	@Id
-	@SequenceGenerator(name = "xxrtv_nom_seq", sequenceName = "xxrtv_nom_seq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "xxrtv_nom_seq")
+	@SequenceGenerator(name = "xxrtv_nom_hen_seq", sequenceName = "xxrtv_nom_hen_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "xxrtv_nom_hen_seq")
 	@Column(name = "NOM_HENDELSE_ID")
 	private Long id;
 

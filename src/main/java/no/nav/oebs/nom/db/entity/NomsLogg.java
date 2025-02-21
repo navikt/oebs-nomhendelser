@@ -38,8 +38,8 @@ public class NomsLogg {
 	public static final int MAX_KAFKA_KEY_LEN = 100;
 
     @Id
-	@SequenceGenerator(name = "nom_logg_seq", sequenceName = "nom_logg_seq", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "nom_logg_seq")
+	@SequenceGenerator(name = "xxrtv_nom_logg_seq", sequenceName = "xxrtv_nom_logg_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "xxrtv_nom_logg_seq")
 	@Column(name = "KALL_LOGG_ID")
 	private Long id;
 
