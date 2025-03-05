@@ -24,11 +24,11 @@ spec:
     timeout: 10
   resources:
     limits:
-      cpu: 758m
+      cpu: 200m
       memory: 768Mi
     requests:
-      cpu: 200m
-      memory: 512Mi
+      cpu: 20m
+      memory: 400Mi
   prometheus:
     enabled: true
     path: /actuator/prometheus
