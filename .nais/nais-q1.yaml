@@ -44,4 +44,4 @@ spec:
       - kvPath: "kv/preprod/fss/oebs-nomhendelser-q1/team-oebs"
         mountPath: "/var/run/secrets/nais.io/vault"
   ingresses:
-    - "https://oebs-nomhendelser-q1.dev.intern.nav.no"
+    - "https://oebs-nomhendelser-q1.intern.dev.nav.no"
