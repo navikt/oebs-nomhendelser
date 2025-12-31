@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>3.5.9</version>
         <relativePath/>
     </parent>
 
@@ -21,10 +21,10 @@
         <logback-classic>1.5.16</logback-classic>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <org-codehaus-mojo-version>3.6.0</org-codehaus-mojo-version>
+        <org-codehaus-mojo-version>3.6.1</org-codehaus-mojo-version>
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
         <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -85,18 +85,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
-            <exclusions>
-                <!-- Vulnerability CVE-2024-47554 -->
-                <exclusion>
-                    <groupId>common-io</groupId>
-                    <artifactId>common-io</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
         </dependency>
 
         <dependency>
