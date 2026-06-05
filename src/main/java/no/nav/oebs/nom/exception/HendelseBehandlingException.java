@@ -7,10 +7,6 @@ public class HendelseBehandlingException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public HendelseBehandlingException(String message) {
-		super(message);
-	}
-
 	public HendelseBehandlingException(Throwable cause) {
 		super(cause);
 	}

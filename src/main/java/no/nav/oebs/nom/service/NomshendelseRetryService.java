@@ -22,9 +22,6 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 
 	private final NomshendelseRepository nomshendelseRepository;
 
-//	private NomshendelseFacadeRepository hendelseFacadeRepository;
-    //private OebsLoggFacadeRepository oebsLoggFacadeRepository;
-
 	public NomshendelseRetryService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
 			ObjectMapper objectMapper) {
 		super(serviceConfig, objectMapper);

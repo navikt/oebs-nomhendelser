@@ -4,6 +4,11 @@ on:
     branches:
       - 'dev/**'
       - 'main'
+  pull_request:
+    branches:
+      - dev/**
+      - main
+
 jobs:
   build_and_push:
     permissions:
@@ -21,7 +26,7 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests
+        run: mvn clean install
 
       - uses: nais/docker-build-push@v0
         id: docker-push
