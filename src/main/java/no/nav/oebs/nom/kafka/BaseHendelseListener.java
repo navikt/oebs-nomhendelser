@@ -4,13 +4,13 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import no.nav.oebs.nom.db.entity.NomsLogg;
+import no.nav.oebs.nom.db.entity.Logg;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import lombok.extern.slf4j.Slf4j;
-import no.nav.oebs.nom.db.repository.NomsLoggRepository;
+import no.nav.oebs.nom.db.repository.LoggRepository;
 
 /**
  * Kafka-basislistener som inneholder basisfunksjonalitet for mottak av hendelser. Kafka-listeneren som leser aktuelle topics
@@ -22,10 +22,10 @@ public class BaseHendelseListener {
 	public static final int STATUS_OK = 900;
 	public static final int STATUS_ERROR = 909;
 
-	private NomsLoggRepository nomsLoggRepository;
+	private LoggRepository loggRepository;
 
-	public BaseHendelseListener(NomsLoggRepository nomsLoggRepository) {
-		this.nomsLoggRepository = nomsLoggRepository;
+	public BaseHendelseListener(LoggRepository loggRepository) {
+		this.loggRepository = loggRepository;
 	}
 
 	/**
@@ -48,16 +48,16 @@ public class BaseHendelseListener {
 	/**
 	 * Logger Kafka-meldingen med tilleggsinformasjon til kalloggen.
 	 */
-	protected void logToNomsLogg(String korrelasjonId, int status, long startTime, String message,
+	protected void logToLogg(String korrelasjonId, int status, long startTime, String message,
 			ConsumerRecord<?, ?> consumerRecord, Exception exception) {
 
 		long endTime = System.currentTimeMillis();
 
-		NomsLogg nomsLoggEntry = NomsLogg.builder() //
+		Logg loggEntry = Logg.builder() //
 				.korrelasjonId(korrelasjonId) //
 				.tidspunkt(LocalDateTime.now()) //
-				.type(NomsLogg.TYPE_KAFKA) //
-				.kallRetning(NomsLogg.RETNING_INN) //
+				.type(Logg.TYPE_KAFKA) //
+				.kallRetning(Logg.RETNING_INN) //
 				.operation(consumerRecord.topic()) //
 				.status(status) //
 				.kalltid(endTime - startTime) //
@@ -65,14 +65,14 @@ public class BaseHendelseListener {
 				.kafkaOffset(consumerRecord.offset()) //
 				.kafkaTimestamp(epochToLocalDateTime(consumerRecord.timestamp())) //
 				.kafkaTimestampType(consumerRecord.timestampType().name()) //
-				.kafkaKey(getValueAsString(consumerRecord.key(), NomsLogg.MAX_KAFKA_KEY_LEN)) //
+				.kafkaKey(getValueAsString(consumerRecord.key(), Logg.MAX_KAFKA_KEY_LEN)) //
 				.request(message) //
 				.logginfo(LoggingUtils.formatExceptionAsString(exception)) //
 				.build();
 
-		log.debug(nomsLoggEntry.toString());
+		log.debug(loggEntry.toString());
 
-		saveNomsLogg(nomsLoggEntry);
+		saveNomsLogg(loggEntry);
 	}
 
 	private String getValueAsString(Object value, int maxLength) {
@@ -84,9 +84,9 @@ public class BaseHendelseListener {
 		return result;
 	}
 
-	private void saveNomsLogg(NomsLogg nomsLoggEntry) {
+	private void saveNomsLogg(Logg loggEntry) {
 		try {
-			nomsLoggRepository.save(nomsLoggEntry);
+			loggRepository.save(loggEntry);
 		} catch (Exception e) {
 			log.error("Feil ved logging av kalloggdata til databasen; feilmelding=" + e.getMessage(), e);
 		}
