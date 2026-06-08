@@ -17,8 +17,7 @@
     </appender>
 
     <springProfile name="nais">
-        <root>
-            <level value="INFO" />
+        <root level="INFO">
             <appender-ref ref="stdout_json" />
         </root>
     </springProfile>
