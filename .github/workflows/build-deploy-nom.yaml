@@ -29,6 +29,7 @@ jobs:
         run: mvn clean install
 
       - uses: nais/docker-build-push@v0
+        if: github.event_name != 'pull_request'
         id: docker-push
         with:
           team: team-oebs # required
@@ -42,6 +43,7 @@ jobs:
           # project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # required, but is defined as an organization variable
           # identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
           salsa: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to NAIS (T1)
         if: startsWith(github.ref, 'refs/heads/dev/t1')  || github.ref == 'refs/heads/main'
