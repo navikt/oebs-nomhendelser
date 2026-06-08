@@ -33,17 +33,6 @@ jobs:
         id: docker-push
         with:
           team: team-oebs # required
-          tenant: nav # optional
-          push_image: true
-          pull: true
-          dockerfile: Dockerfile
-          docker_context: .
-          cache_from: type=gha
-          cache_to: type=gha,mode=max
-          # project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # required, but is defined as an organization variable
-          # identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
-          salsa: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to NAIS (T1)
         if: startsWith(github.ref, 'refs/heads/dev/t1')  || github.ref == 'refs/heads/main'
