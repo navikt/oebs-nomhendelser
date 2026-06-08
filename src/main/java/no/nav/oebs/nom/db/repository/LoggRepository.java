@@ -1,6 +1,6 @@
 package no.nav.oebs.nom.db.repository;
 
-import no.nav.oebs.nom.db.entity.NomsLogg;
+import no.nav.oebs.nom.db.entity.Logg;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -11,6 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public interface NomsLoggRepository extends JpaRepository<NomsLogg, Integer>, NomsLoggRepositoryCustom {
+public interface LoggRepository extends JpaRepository<Logg, Integer>, PingRepository {
 
 }

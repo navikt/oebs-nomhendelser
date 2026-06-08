@@ -3,14 +3,14 @@ package no.nav.oebs.nom.db.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
-import no.nav.oebs.nom.db.entity.NomsLogg;
+import no.nav.oebs.nom.db.entity.Logg;
 import org.springframework.stereotype.Repository;
 
 /**
- * Implementasjonsklasse for {@link NomsLoggRepositoryCustom}.
+ * Implementasjonsklasse for {@link PingRepository}.
  */
 @Repository
-public class NomsLoggRepositoryImpl implements NomsLoggRepositoryCustom {
+public class PingRepositoryImpl implements PingRepository {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -18,7 +18,7 @@ public class NomsLoggRepositoryImpl implements NomsLoggRepositoryCustom {
 	@Override
 	public void pingKallLogg() {
 
-		entityManager.createQuery("SELECT k FROM NomsLogg k WHERE k.id = 0", NomsLogg.class)
+		entityManager.createQuery("SELECT k FROM Logg k WHERE k.id = 0", Logg.class)
 				.getResultList();
 	}
 }
