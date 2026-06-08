@@ -37,9 +37,12 @@ spring:
 
 app:
   kafka:
+    debug-mode: true
     nomshendelse:
       topic: nom.skjermede-personer-status-v1
       auto-startup: true
+    livshendelse:
+      topic: pdl.leesah-v1
     filter:
       debug-mode: false
       start-time: 2024-12-01T12:00:00
