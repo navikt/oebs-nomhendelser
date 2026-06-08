@@ -17,9 +17,6 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
 
-// import io.confluent.kafka.serializers.KafkaAvroDeserializer;
-//import no.nav.person.pdl.leesah.Personhendelse;
-
 /**
  * Konfigurasjonsklasse for Kafka.
  */

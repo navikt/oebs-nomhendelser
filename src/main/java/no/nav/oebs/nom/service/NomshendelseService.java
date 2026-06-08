@@ -25,8 +25,6 @@ public class NomshendelseService extends NomshendelseServiceBase {
 
 	NomshendelseRepository nomshendelseRepository;
 
-	//private NomshendelsesFacadeRepository nomshendelsesFacadeRepository;
-
 	public NomshendelseService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
 			ObjectMapper objectMapper) {
 		super(serviceConfig, objectMapper);
