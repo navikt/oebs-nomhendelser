@@ -4,6 +4,11 @@ on:
     branches:
       - 'dev/**'
       - 'main'
+  pull_request:
+    branches:
+      - dev/**
+      - main
+
 jobs:
   build_and_push:
     permissions:
@@ -21,22 +26,13 @@ jobs:
           java-version: '21'
 
       - name: Build with Maven
-        run: mvn clean install -DskipTests
+        run: mvn clean install
 
       - uses: nais/docker-build-push@v0
+        if: github.event_name != 'pull_request'
         id: docker-push
         with:
           team: team-oebs # required
-          tenant: nav # optional
-          push_image: true
-          pull: true
-          dockerfile: Dockerfile
-          docker_context: .
-          cache_from: type=gha
-          cache_to: type=gha,mode=max
-          # project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # required, but is defined as an organization variable
-          # identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
-          salsa: true
 
       - name: Deploy to NAIS (T1)
         if: startsWith(github.ref, 'refs/heads/dev/t1')  || github.ref == 'refs/heads/main'

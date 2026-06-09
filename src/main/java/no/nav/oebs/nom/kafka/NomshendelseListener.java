@@ -19,7 +19,6 @@ import no.nav.oebs.nom.service.NomshendelseService;
 @Component
 public class NomshendelseListener extends BaseHendelseListener {
 
-	//KafkaFilterConfig kafkaFilterConfig;
 	NomshendelseService nomshendelseService;
 
 	public NomshendelseListener(NomsLoggRepository nomsLoggRepository, NomshendelseService nomshendelseService) {

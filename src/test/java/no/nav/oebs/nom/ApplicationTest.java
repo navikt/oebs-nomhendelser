@@ -1,20 +1,25 @@
 package no.nav.oebs.nom;
 
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.context.ApplicationContext;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
  * Enhetstest for loading av applikasjonskonteksten.
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@AllArgsConstructor
 class ApplicationTest {
 
+	private ApplicationContext applicationContext;
+
 	@Test
-	public void contextLoads() {
+	void contextLoads() {
+		assertThat(applicationContext).isNotNull();
 	}
 }
 
