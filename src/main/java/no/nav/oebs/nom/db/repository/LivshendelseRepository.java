@@ -1,6 +1,7 @@
 package no.nav.oebs.nom.db.repository;
 
 import no.nav.oebs.nom.db.entity.Livshendelse;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * Data.
  */
 @Repository
-public interface LivshendelseRepository extends HendelseRepository<Livshendelse, Long> {
+public interface LivshendelseRepository extends JpaRepository<Livshendelse, Long> {
 
 	/**
 	 * Finner livshendelser med spesifisert hendelse ID og opplysningstype, unntatt hendelser med spesifisert status.
@@ -20,12 +21,4 @@ public interface LivshendelseRepository extends HendelseRepository<Livshendelse,
 	List<Livshendelse> findByHendelseIdAndHendelseOpplysningstypeAndStatusNotIn(String hendelseId, String opplysningstype,
 			List<String> statuser);
 
-	/**
-	 * Finner livshendelser med spesifisert personidenter og opplysningstype, samt at hendelsene må være nyere enn spesifisert
-	 * ID-verdi.
-	 *
-	 * @return En liste av alle livshendelser som oppfyller kriteriene; ellers en tom liste.
-	 */
-	List<Livshendelse> findByHendelsePersonidenterAndHendelseOpplysningstypeAndIdGreaterThan(String hendelsePersonidenter,
-			String hendelseOpplysningstype, Long id);
 }
