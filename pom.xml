@@ -40,6 +40,11 @@
         <logstash-logback-encoder.version>8.0</logstash-logback-encoder.version>
         <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
         <commons-lang3.version>3.18.0</commons-lang3.version>
+
+        <avro.version>1.12.0</avro.version>
+        <kafka-avro-serializer.version>7.9.1</kafka-avro-serializer.version>
+
+
     </properties>
 
     <dependencies>
@@ -68,6 +73,19 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- Kafka/Avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>${avro.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>${kafka-avro-serializer.version}</version>
         </dependency>
 
         <!-- Automatisk reload ved kodeendringer -->
@@ -140,6 +158,13 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>confluent</id>
+            <url>https://packages.confluent.io/maven/</url>
+        </repository>
+    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -166,6 +191,23 @@
                     <jvmArguments>
                     </jvmArguments>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>${avro.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>idl-protocol</goal>
+                        </goals>
+                        <configuration>
+                            <fieldVisibility>private</fieldVisibility>
+                            <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

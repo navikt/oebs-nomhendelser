@@ -3,6 +3,8 @@ package no.nav.oebs.nom.kafka;
 import java.time.Duration;
 import java.util.Map;
 
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
+import no.nav.person.pdl.leesah.Personhendelse;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +63,30 @@ public class KafkaConfig {
 		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
 		consumerProperties.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
 		consumerProperties.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, StringDeserializer.class);
+
+		return new DefaultKafkaConsumerFactory<>(consumerProperties);
+	}
+
+	@Bean
+	public ConcurrentKafkaListenerContainerFactory<String, Personhendelse> kafkaLivshendelseListenerContainerFactory(
+			KafkaProperties properties) {
+
+		ConcurrentKafkaListenerContainerFactory<String, Personhendelse> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(kafkaLivshendelseConsumerFactory(properties));
+		factory.getContainerProperties()
+				.setAuthExceptionRetryInterval(Duration.ofSeconds(authorizationExceptionRetryIntervalSecs));
+		factory.setCommonErrorHandler(new DefaultErrorHandler(new FixedBackOff(retryBackoffPeriod, retryMaxAttempts)));
+
+		return factory;
+	}
+
+	private ConsumerFactory<String, Object> kafkaLivshendelseConsumerFactory(KafkaProperties properties) {
+		Map<String, Object> consumerProperties = properties.buildConsumerProperties();
+		consumerProperties.put("specific.avro.reader", "true");
+		consumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+		consumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
+		consumerProperties.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+		consumerProperties.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, KafkaAvroDeserializer.class);
 
 		return new DefaultKafkaConsumerFactory<>(consumerProperties);
 	}

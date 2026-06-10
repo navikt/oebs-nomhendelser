@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.mdc.MdcOperations;
-import no.nav.oebs.nom.db.repository.NomsLoggRepository;
+import no.nav.oebs.nom.db.repository.LoggRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
-import no.nav.oebs.nom.kafka.nomshendelse.model.NomshendelseDto;
+import no.nav.oebs.nom.kafka.model.NomshendelseDto;
 import no.nav.oebs.nom.service.NomshendelseService;
 
 /**
@@ -21,8 +21,8 @@ public class NomshendelseListener extends BaseHendelseListener {
 
 	NomshendelseService nomshendelseService;
 
-	public NomshendelseListener(NomsLoggRepository nomsLoggRepository, NomshendelseService nomshendelseService) {
-		super(nomsLoggRepository);
+	public NomshendelseListener(LoggRepository loggRepository, NomshendelseService nomshendelseService) {
+		super(loggRepository);
 		this.nomshendelseService = nomshendelseService;
 	}
 
@@ -60,7 +60,7 @@ public class NomshendelseListener extends BaseHendelseListener {
 			log.error("Mottatt nomshendelse kan ikke behandles og må rulles tilbake på topic", e);
 			throw e;
 		} finally {
-			logToNomsLogg(korrelasjonId, status, startTime, hendelseAsJson, consumerRecord, exception);
+			logToLogg(korrelasjonId, status, startTime, hendelseAsJson, consumerRecord, exception);
 			MdcOperations.remove(MdcOperations.MDC_CORRELATION_ID);
 		}
 	}
