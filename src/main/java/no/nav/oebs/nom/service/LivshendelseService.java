@@ -7,7 +7,7 @@ import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.repository.LivshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
 import no.nav.oebs.nom.exception.RollbackHendelseException;
-import no.nav.oebs.nom.kafka.nomshendelse.model.LivshendelseDto;
+import no.nav.oebs.nom.kafka.model.LivshendelseDto;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import org.apache.commons.lang3.StringUtils;

@@ -23,21 +23,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 
-import no.nav.oebs.nom.db.entity.NomsLogg;
-import no.nav.oebs.nom.db.repository.NomsLoggRepository;
+import no.nav.oebs.nom.db.entity.Logg;
+import no.nav.oebs.nom.db.repository.LoggRepository;
 import no.nav.oebs.nom.mdc.MdcOperations;
 
 @ExtendWith(MockitoExtension.class)
 class BaseHendelseListenerTest {
 
     @Mock
-    private NomsLoggRepository nomsLoggRepository;
+    private LoggRepository loggRepository;
 
     private TestableBaseHendelseListener listener;
 
     @BeforeEach
     void setUp() {
-        listener = new TestableBaseHendelseListener(nomsLoggRepository);
+        listener = new TestableBaseHendelseListener(loggRepository);
     }
 
     @AfterEach
@@ -92,16 +92,16 @@ class BaseHendelseListenerTest {
         String korrelasjonId = "korr-test-123";
         long startTime = System.currentTimeMillis();
 
-        listener.testLogToNomsLogg(korrelasjonId, STATUS_OK, startTime, "{hendelse:true}", record, null);
+        listener.testLogToLogg(korrelasjonId, STATUS_OK, startTime, "{hendelse:true}", record, null);
 
-        ArgumentCaptor<NomsLogg> captor = ArgumentCaptor.forClass(NomsLogg.class);
-        verify(nomsLoggRepository).save(captor.capture());
-        NomsLogg lagret = captor.getValue();
+        ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
+        verify(loggRepository).save(captor.capture());
+        Logg lagret = captor.getValue();
 
         assertEquals(korrelasjonId, lagret.getKorrelasjonId());
         assertEquals(STATUS_OK, lagret.getStatus());
-        assertEquals(NomsLogg.TYPE_KAFKA, lagret.getType());
-        assertEquals(NomsLogg.RETNING_INN, lagret.getKallRetning());
+        assertEquals(Logg.TYPE_KAFKA, lagret.getType());
+        assertEquals(Logg.RETNING_INN, lagret.getKallRetning());
         assertEquals("nom.topic", lagret.getOperation());
         assertEquals(2, lagret.getKafkaPartition());
         assertEquals(42L, lagret.getKafkaOffset());
@@ -110,47 +110,47 @@ class BaseHendelseListenerTest {
     }
 
     @Test
-    void logToNomsLogg_errorStatus_savesWithExceptionMessage() {
+    void logToLogg_errorStatus_savesWithExceptionMessage() {
         ConsumerRecord<String, String> record = buildConsumerRecord("nom.topic", 0, 1L, "key");
         RuntimeException feil = new RuntimeException("Behandlingsfeil");
 
-        listener.testLogToNomsLogg("id", STATUS_ERROR, System.currentTimeMillis(), "{}", record, feil);
+        listener.testLogToLogg("id", STATUS_ERROR, System.currentTimeMillis(), "{}", record, feil);
 
-        ArgumentCaptor<NomsLogg> captor = ArgumentCaptor.forClass(NomsLogg.class);
-        verify(nomsLoggRepository).save(captor.capture());
+        ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
+        verify(loggRepository).save(captor.capture());
         assertNotNull(captor.getValue().getLogginfo(), "Logginfo should contain exception details");
         assertTrue(captor.getValue().getLogginfo().contains("Behandlingsfeil"));
     }
 
     @Test
-    void logToNomsLogg_repositoryThrowsException_exceptionIsCaught() {
+    void logToLogg_repositoryThrowsException_exceptionIsCaught() {
         ConsumerRecord<String, String> record = buildConsumerRecord("nom.topic", 0, 0L, "key");
-        when(nomsLoggRepository.save(any())).thenThrow(new RuntimeException("DB nede"));
+        when(loggRepository.save(any())).thenThrow(new RuntimeException("DB nede"));
 
         assertDoesNotThrow(() ->
-                listener.testLogToNomsLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null));
+                listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null));
     }
 
     @Test
-    void logToNomsLogg_kafkaKeyExceedsMaxLength_isTrimmedToMaxLength() {
-        String longKey = "x".repeat(NomsLogg.MAX_KAFKA_KEY_LEN + 50);
+    void logToLogg_kafkaKeyExceedsMaxLength_isTrimmedToMaxLength() {
+        String longKey = "x".repeat(Logg.MAX_KAFKA_KEY_LEN + 50);
         ConsumerRecord<String, String> record = buildConsumerRecord("topic", 0, 0L, longKey);
 
-        listener.testLogToNomsLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
+        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
 
-        ArgumentCaptor<NomsLogg> captor = ArgumentCaptor.forClass(NomsLogg.class);
-        verify(nomsLoggRepository).save(captor.capture());
-        assertEquals(NomsLogg.MAX_KAFKA_KEY_LEN, captor.getValue().getKafkaKey().length());
+        ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
+        verify(loggRepository).save(captor.capture());
+        assertEquals(Logg.MAX_KAFKA_KEY_LEN, captor.getValue().getKafkaKey().length());
     }
 
     @Test
-    void logToNomsLogg_nullKafkaKey_savedWithoutError() {
+    void logToLogg_nullKafkaKey_savedWithoutError() {
         ConsumerRecord<String, String> record = buildConsumerRecord("topic", 0, 0L, null);
 
-        listener.testLogToNomsLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
+        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
 
-        ArgumentCaptor<NomsLogg> captor = ArgumentCaptor.forClass(NomsLogg.class);
-        verify(nomsLoggRepository).save(captor.capture());
+        ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
+        verify(loggRepository).save(captor.capture());
         assertNull(captor.getValue().getKafkaKey());
     }
 
@@ -161,7 +161,7 @@ class BaseHendelseListenerTest {
     /** Konkret subklasse for å eksponere protected metoder i tester */
     static class TestableBaseHendelseListener extends BaseHendelseListener {
 
-        TestableBaseHendelseListener(NomsLoggRepository repo) {
+        TestableBaseHendelseListener(LoggRepository repo) {
             super(repo);
         }
 
@@ -173,9 +173,9 @@ class BaseHendelseListenerTest {
             return generateAndSetCorrelationId();
         }
 
-        void testLogToNomsLogg(String korrelasjonId, int status, long startTime,
+        void testLogToLogg(String korrelasjonId, int status, long startTime,
                 String message, ConsumerRecord<?, ?> record, Exception exception) {
-            logToNomsLogg(korrelasjonId, status, startTime, message, record, exception);
+            logToLogg(korrelasjonId, status, startTime, message, record, exception);
         }
     }
 }

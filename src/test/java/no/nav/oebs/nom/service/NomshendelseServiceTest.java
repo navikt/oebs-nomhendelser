@@ -27,7 +27,7 @@ import no.nav.oebs.nom.db.entity.BaseHendelse;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
-import no.nav.oebs.nom.kafka.nomshendelse.model.NomshendelseDto;
+import no.nav.oebs.nom.kafka.model.NomshendelseDto;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

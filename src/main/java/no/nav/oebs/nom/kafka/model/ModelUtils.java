@@ -1,4 +1,4 @@
-package no.nav.oebs.nom.kafka.nomshendelse.model;
+package no.nav.oebs.nom.kafka.model;
 
 /**
  * Felles hjelpemetoder for modellklasser.

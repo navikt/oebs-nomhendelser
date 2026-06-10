@@ -3,7 +3,7 @@ package no.nav.oebs.nom.kafka;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.db.repository.LoggRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
-import no.nav.oebs.nom.kafka.nomshendelse.model.LivshendelseDto;
+import no.nav.oebs.nom.kafka.model.LivshendelseDto;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import no.nav.oebs.nom.service.LivshendelseService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
