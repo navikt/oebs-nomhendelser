@@ -2,7 +2,9 @@ package no.nav.oebs.nom.db.repository;
 
 import java.util.List;
 
+import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data.
  */
 @Repository
-public interface NomshendelseRepository extends HendelseRepository<NomsHendelse, Long> {
+public interface NomshendelseRepository extends JpaRepository<NomsHendelse, Long> {
 
 	/**
 	 * Finner nomshendelser med spesifisert hendelse ID, unntatt hendelser med spesifisert status.
