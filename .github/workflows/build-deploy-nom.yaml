@@ -9,11 +9,6 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      deploy_q1:
-        description: 'Deploy q1 instance'
-        required: true
-        type: boolean
-        default: false
       deploy_prod:
         description: 'Deploy to production'
         required: true
@@ -79,8 +74,7 @@ jobs:
   deploy-q1:
     name: Deploy q1 instance
     needs: [build, deploy-t1]
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy_q1 == true
-    #if: github.event_name != 'pull_request' && github.ref_name == 'main' todo: change after testing
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
