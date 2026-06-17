@@ -59,12 +59,14 @@ public class NomshendelseService extends NomshendelseServiceBase {
 		try {
 			if (isNyHendelseDuplikat(nomshendelse)) {
 				nomshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
+				log.info("Nomhendelse is duplicate {}", nomshendelse.getId() );
+
 			} else {
 				addHendelseOebsToEntity(nomshendelse);
-
 				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
-
+				log.info("Nomhendelse successfully processed {}", nomshendelse.getId() );
 			}
+
 		} catch (Exception e) {
 			nomshendelse.setStatus(NomsHendelse.STATUS_RETRY);
 			nomshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());

@@ -60,10 +60,13 @@ public class LivshendelseService extends HendelseServiceBase {
 			addMottattLivshendelseToEntity(livshendelse, mottattHendelse);
 			if (isNyHendelseDuplikat(livshendelse)) {
 				livshendelse.setStatus(Livshendelse.STATUS_DUPLIKAT);
-			} else {
+				log.info("Livshendese is duplicate {}", livshendelse.getId() );
 
+			} else {
 				livshendelse.setStatus(Livshendelse.STATUS_BEHANDLET);
+				log.info("Livshendese successfully processed {}", livshendelse.getId() );
 			}
+
 		} catch (Exception e) {
 			livshendelse.setStatus(Livshendelse.STATUS_RETRY);
 			livshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());
