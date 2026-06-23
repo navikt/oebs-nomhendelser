@@ -8,10 +8,6 @@ public class RollbackHendelseException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public RollbackHendelseException(String message) {
-		super(message);
-	}
-
 	public RollbackHendelseException(Throwable cause) {
 		super(cause);
 	}
