@@ -25,11 +25,10 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.slf4j.MDC;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 import no.nav.oebs.nom.mdc.MdcOperations;
+import tools.jackson.databind.json.JsonMapper;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -45,7 +44,7 @@ class NomshendelseRetryServiceTest {
 
     @BeforeEach
     void setUp() {
-        retryService = new NomshendelseRetryService(serviceConfig, nomshendelseRepository, new ObjectMapper());
+        retryService = new NomshendelseRetryService(serviceConfig, nomshendelseRepository, new JsonMapper());
         when(serviceConfig.getRetryAttempt1DelayMins()).thenReturn(1);
         when(serviceConfig.getRetryAttemptNDelayMins()).thenReturn(60);
         when(serviceConfig.getRetryMaxAttempts()).thenReturn(5);

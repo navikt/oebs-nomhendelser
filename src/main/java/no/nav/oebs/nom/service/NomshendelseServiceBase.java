@@ -1,19 +1,17 @@
 package no.nav.oebs.nom.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.service.model.NomshendelseOebs;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Basisklasse som arves av nomshendelsetjenestene for bruk av felles funksjonalitet.
  */
 public class NomshendelseServiceBase extends HendelseServiceBase {
 
-	private final ObjectMapper objectMapper;
+	private final JsonMapper objectMapper;
 
-	public NomshendelseServiceBase(ServiceConfig serviceConfig, ObjectMapper objectMapper) {
+	public NomshendelseServiceBase(ServiceConfig serviceConfig, JsonMapper objectMapper) {
 		super(serviceConfig);
 		this.objectMapper = objectMapper;
 	}
@@ -21,7 +19,7 @@ public class NomshendelseServiceBase extends HendelseServiceBase {
 	/**
 	 * Legger til hendelseOebs-feltet på entiteten. Dette er hendelsen på JSON-format som overføres til Oebs.
 	 */
-	protected void addHendelseOebsToEntity(NomsHendelse entity) throws JsonProcessingException {
+	protected void addHendelseOebsToEntity(NomsHendelse entity) {
 		boolean status = Boolean.parseBoolean(entity.getHendelse());
 
 		NomshendelseOebs nomshendelseOebs = NomshendelseOebs.builder() //
