@@ -9,10 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.oebs.nom.db.entity.NomsHendelse;
+import tools.jackson.databind.json.JsonMapper;
 
 @ExtendWith(MockitoExtension.class)
 class NomshendelseServiceBaseTest {
@@ -24,11 +22,11 @@ class NomshendelseServiceBaseTest {
 
     @BeforeEach
     void setUp() {
-        serviceBase = new NomshendelseServiceBase(serviceConfig, new ObjectMapper()) {};
+        serviceBase = new NomshendelseServiceBase(serviceConfig, new JsonMapper()) {};
     }
 
     @Test
-    void addHendelseOebsToEntity_trueBooleanString_setsStatusTrueInJson() throws JsonProcessingException {
+    void addHendelseOebsToEntity_trueBooleanString_setsStatusTrueInJson() {
         NomsHendelse hendelse = buildHendelse("true", "12345678901");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
@@ -39,7 +37,7 @@ class NomshendelseServiceBaseTest {
     }
 
     @Test
-    void addHendelseOebsToEntity_falseBooleanString_setsStatusFalseInJson() throws JsonProcessingException {
+    void addHendelseOebsToEntity_falseBooleanString_setsStatusFalseInJson(){
         NomsHendelse hendelse = buildHendelse("false", "12345678901");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
@@ -49,7 +47,7 @@ class NomshendelseServiceBaseTest {
     }
 
     @Test
-    void addHendelseOebsToEntity_invalidBooleanString_setsStatusFalse() throws JsonProcessingException {
+    void addHendelseOebsToEntity_invalidBooleanString_setsStatusFalse() {
         // Boolean.parseBoolean returns false for anything other than "true"
         NomsHendelse hendelse = buildHendelse("ugyldig_verdi", "12345678901");
 
@@ -59,7 +57,7 @@ class NomshendelseServiceBaseTest {
     }
 
     @Test
-    void addHendelseOebsToEntity_includesPersonalNumberInJson() throws JsonProcessingException {
+    void addHendelseOebsToEntity_includesPersonalNumberInJson()  {
         NomsHendelse hendelse = buildHendelse("true", "12345678901");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
@@ -69,7 +67,7 @@ class NomshendelseServiceBaseTest {
     }
 
     @Test
-    void addHendelseOebsToEntity_overwritesOriginalEventField() throws JsonProcessingException {
+    void addHendelseOebsToEntity_overwritesOriginalEventField() {
         NomsHendelse hendelse = buildHendelse("true", "12345678901");
         String opprinneligVerdi = hendelse.getHendelse();
 

@@ -21,13 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import no.nav.oebs.nom.db.entity.BaseHendelse;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
 import no.nav.oebs.nom.kafka.model.NomshendelseDto;
+import tools.jackson.databind.json.JsonMapper;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -43,7 +42,7 @@ class NomshendelseServiceTest {
 
     @BeforeEach
     void setUp() {
-        nomshendelseService = new NomshendelseService(serviceConfig, nomshendelseRepository, new ObjectMapper());
+        nomshendelseService = new NomshendelseService(serviceConfig, nomshendelseRepository, new JsonMapper());
 
         when(serviceConfig.getRetryMaxAttempts()).thenReturn(5);
         when(serviceConfig.getRetryAttempt1DelayMins()).thenReturn(1);

@@ -23,9 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import tools.jackson.databind.json.JsonMapper;
 import no.nav.oebs.nom.db.entity.BaseHendelse;
 import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.repository.LivshendelseRepository;
@@ -46,8 +44,7 @@ class LivshendelseServiceTest {
 
     @BeforeEach
     void setUp() {
-        livshendelseService = new LivshendelseService(serviceConfig, livshendelseRepository,
-                new ObjectMapper().registerModule(new JavaTimeModule()));
+        livshendelseService = new LivshendelseService(serviceConfig, livshendelseRepository, new JsonMapper());
 
         when(serviceConfig.getRetryMaxAttempts()).thenReturn(5);
         when(serviceConfig.getRetryAttempt1DelayMins()).thenReturn(1);

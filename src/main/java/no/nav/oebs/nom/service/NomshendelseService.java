@@ -7,14 +7,13 @@ import no.nav.oebs.nom.kafka.model.NomshendelseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Serviceklasse som behandler mottatte nomshendelser fra Kafka.
@@ -26,7 +25,7 @@ public class NomshendelseService extends NomshendelseServiceBase {
 	NomshendelseRepository nomshendelseRepository;
 
 	public NomshendelseService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
-			ObjectMapper objectMapper) {
+			JsonMapper objectMapper) {
 		super(serviceConfig, objectMapper);
 		this.nomshendelseRepository = nomshendelseRepository;
 	}

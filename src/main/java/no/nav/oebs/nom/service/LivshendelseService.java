@@ -1,18 +1,16 @@
 package no.nav.oebs.nom.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.repository.LivshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
-import no.nav.oebs.nom.exception.RollbackHendelseException;
 import no.nav.oebs.nom.kafka.model.LivshendelseDto;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +24,9 @@ public class LivshendelseService extends HendelseServiceBase {
 
 	private LivshendelseRepository livshendelseRepository;
 
-	private ObjectMapper objectMapper;
+	private JsonMapper objectMapper;
 
-	public LivshendelseService(ServiceConfig serviceConfig, LivshendelseRepository livshendelseRepository, ObjectMapper objectMapper) {
+	public LivshendelseService(ServiceConfig serviceConfig, LivshendelseRepository livshendelseRepository, JsonMapper objectMapper) {
 		super(serviceConfig);
 		this.livshendelseRepository = livshendelseRepository;
 		this.objectMapper = objectMapper;
@@ -85,18 +83,14 @@ public class LivshendelseService extends HendelseServiceBase {
 	 * er persistert.
 	 */
 	private Livshendelse createAndSaveBasicLivshendelseEntity(LivshendelseDto mottattHendelse) {
-		try {
-			String hendelseAsJson = objectMapper.writeValueAsString(mottattHendelse);
-			Livshendelse hendelse = Livshendelse.builder() //
-					.korrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
-					.status(Livshendelse.STATUS_NY) //
-					.hendelse(hendelseAsJson) //
-					.build();
+		String hendelseAsJson = objectMapper.writeValueAsString(mottattHendelse);
+		Livshendelse hendelse = Livshendelse.builder() //
+				.korrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
+				.status(Livshendelse.STATUS_NY) //
+				.hendelse(hendelseAsJson) //
+				.build();
 
-			return livshendelseRepository.save(hendelse);
-		} catch (JsonProcessingException e) {
-			throw new RollbackHendelseException(e);
-		}
+		return livshendelseRepository.save(hendelse);
 	}
 
 	/**

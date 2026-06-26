@@ -4,13 +4,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 import no.nav.oebs.nom.logging.LoggingUtils;
 import no.nav.oebs.nom.mdc.MdcOperations;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import no.nav.oebs.nom.db.repository.NomshendelseRepository;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Serviceklasse som rekjører nomshendelser som har feilet.
@@ -23,7 +22,7 @@ public class NomshendelseRetryService extends NomshendelseServiceBase
 	private final NomshendelseRepository nomshendelseRepository;
 
 	public NomshendelseRetryService(ServiceConfig serviceConfig, NomshendelseRepository nomshendelseRepository,
-			ObjectMapper objectMapper) {
+			JsonMapper objectMapper) {
 		super(serviceConfig, objectMapper);
 		this.nomshendelseRepository = nomshendelseRepository;
 	}
