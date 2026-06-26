@@ -1,6 +1,7 @@
 package no.nav.oebs.nom.service;
 
 import lombok.extern.slf4j.Slf4j;
+import no.nav.oebs.nom.db.entity.BaseHendelse;
 import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.repository.LivshendelseRepository;
 import no.nav.oebs.nom.exception.HendelseBehandlingException;
@@ -22,9 +23,9 @@ import java.util.stream.Collectors;
 @Service
 public class LivshendelseService extends HendelseServiceBase {
 
-	private LivshendelseRepository livshendelseRepository;
+	private final LivshendelseRepository livshendelseRepository;
 
-	private JsonMapper objectMapper;
+	private final JsonMapper objectMapper;
 
 	public LivshendelseService(ServiceConfig serviceConfig, LivshendelseRepository livshendelseRepository, JsonMapper objectMapper) {
 		super(serviceConfig);
@@ -57,16 +58,16 @@ public class LivshendelseService extends HendelseServiceBase {
 		try {
 			addMottattLivshendelseToEntity(livshendelse, mottattHendelse);
 			if (isNyHendelseDuplikat(livshendelse)) {
-				livshendelse.setStatus(Livshendelse.STATUS_DUPLIKAT);
+				livshendelse.setStatus(BaseHendelse.STATUS_DUPLIKAT);
 				log.info("Livshendese is duplicate {}", livshendelse.getId() );
 
 			} else {
-				livshendelse.setStatus(Livshendelse.STATUS_BEHANDLET);
+				livshendelse.setStatus(BaseHendelse.STATUS_BEHANDLET);
 				log.info("Livshendese successfully processed {}", livshendelse.getId() );
 			}
 
 		} catch (Exception e) {
-			livshendelse.setStatus(Livshendelse.STATUS_RETRY);
+			livshendelse.setStatus(BaseHendelse.STATUS_RETRY);
 			livshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());
 			livshendelse.setRetryTidspunkt(getNextRetryTidspunkt(livshendelse));
 			livshendelse.setFeilinformasjon(LoggingUtils.formatExceptionAsString(e));
@@ -86,7 +87,7 @@ public class LivshendelseService extends HendelseServiceBase {
 		String hendelseAsJson = objectMapper.writeValueAsString(mottattHendelse);
 		Livshendelse hendelse = Livshendelse.builder() //
 				.korrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
-				.status(Livshendelse.STATUS_NY) //
+				.status(BaseHendelse.STATUS_NY) //
 				.hendelse(hendelseAsJson) //
 				.build();
 
@@ -99,7 +100,7 @@ public class LivshendelseService extends HendelseServiceBase {
 	private void addMottattLivshendelseToEntity(Livshendelse entity, LivshendelseDto mottattHendelse) {
 		entity.setHendelseId(getStringValue(mottattHendelse.getHendelseId(), Livshendelse.MAX_ID_LEN));
 		entity.setHendelsePersonidenter(
-				getPersonidenterAsCommaSeparatedString(mottattHendelse.getPersonidenter(), Livshendelse.MAX_PERSONIDENTER_LEN));
+				getPersonidenterAsCommaSeparatedString(mottattHendelse.getPersonidenter()));
 		entity.setHendelseMaster((getStringValue(mottattHendelse.getMaster(), Livshendelse.MAX_MASTER_LEN)));
 		entity.setHendelseOpprettet(mottattHendelse.getOpprettet().toLocalDateTime());
 		entity.setHendelseOpplysningstype(
@@ -121,7 +122,7 @@ public class LivshendelseService extends HendelseServiceBase {
 	 * at alle fnr/dnr kommer først, deretter følger alle aktørId/NPid. Delmengdene av fnr/dnr og aktørId/NPid er sortert
 	 * innbyrdes.
 	 */
-	private String getPersonidenterAsCommaSeparatedString(List<String> list, int maxLength) {
+	private String getPersonidenterAsCommaSeparatedString(List<String> list) {
 		String result = String.join(",", //
 				list.stream().filter(e -> e.length() == 11).sorted().collect(Collectors.joining(",")),
 				list.stream().filter(e -> e.length() != 11).sorted().collect(Collectors.joining(",")));
@@ -130,7 +131,7 @@ public class LivshendelseService extends HendelseServiceBase {
 		result = StringUtils.stripStart(result, ",");
 		result = StringUtils.stripEnd(result, ",");
 
-		return result.substring(0, Math.min(result.length(), maxLength));
+		return result.substring(0, Math.min(result.length(), Livshendelse.MAX_PERSONIDENTER_LEN));
 	}
 
 	/**
@@ -139,6 +140,6 @@ public class LivshendelseService extends HendelseServiceBase {
 	 */
 	private boolean isNyHendelseDuplikat(Livshendelse livshendelse) {
 		return !livshendelseRepository.findByHendelseIdAndHendelseOpplysningstypeAndStatusNotIn(livshendelse.getHendelseId(),
-				livshendelse.getHendelseOpplysningstype(), List.of(Livshendelse.STATUS_NY)).isEmpty();
+				livshendelse.getHendelseOpplysningstype(), List.of(BaseHendelse.STATUS_NY)).isEmpty();
 	}
 }

@@ -3,6 +3,7 @@ package no.nav.oebs.nom.service;
 import java.util.List;
 
 
+import no.nav.oebs.nom.db.entity.BaseHendelse;
 import no.nav.oebs.nom.kafka.model.NomshendelseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,17 +58,17 @@ public class NomshendelseService extends NomshendelseServiceBase {
 
 		try {
 			if (isNyHendelseDuplikat(nomshendelse)) {
-				nomshendelse.setStatus(NomsHendelse.STATUS_DUPLIKAT);
+				nomshendelse.setStatus(BaseHendelse.STATUS_DUPLIKAT);
 				log.info("Nomhendelse is duplicate {}", nomshendelse.getId() );
 
 			} else {
 				addHendelseOebsToEntity(nomshendelse);
-				nomshendelse.setStatus(NomsHendelse.STATUS_BEHANDLET);
+				nomshendelse.setStatus(BaseHendelse.STATUS_BEHANDLET);
 				log.info("Nomhendelse successfully processed {}", nomshendelse.getId() );
 			}
 
 		} catch (Exception e) {
-			nomshendelse.setStatus(NomsHendelse.STATUS_RETRY);
+			nomshendelse.setStatus(BaseHendelse.STATUS_RETRY);
 			nomshendelse.setRetryTeller(serviceConfig.getRetryMaxAttempts());
 			nomshendelse.setRetryTidspunkt(getNextRetryTidspunkt(nomshendelse));
 			nomshendelse.setFeilinformasjon(LoggingUtils.formatExceptionAsString(e));
@@ -85,7 +86,7 @@ public class NomshendelseService extends NomshendelseServiceBase {
 	private NomsHendelse createAndSaveNomsHendelseEntity(NomshendelseDto mottattHendelse) {
 		NomsHendelse hendelse = NomsHendelse.builder() //
 				.korrelasjonId(MdcOperations.get(MdcOperations.MDC_CORRELATION_ID)) //
-				.status(NomsHendelse.STATUS_NY) //
+				.status(BaseHendelse.STATUS_NY) //
 				.hendelseId(mottattHendelse.getHendelseId()) //
 				.hendelseFodselsnr(mottattHendelse.getFodselsnr()) //
 				.hendelseOpprettet(mottattHendelse.getHendelseTimestamp()) //
@@ -101,7 +102,7 @@ public class NomshendelseService extends NomshendelseServiceBase {
 	 */
 	private boolean isNyHendelseDuplikat(NomsHendelse nomsHendelse) {
 		return !nomshendelseRepository
-				.findByHendelseIdAndStatusNotIn(nomsHendelse.getHendelseId(), List.of(NomsHendelse.STATUS_NY))
+				.findByHendelseIdAndStatusNotIn(nomsHendelse.getHendelseId(), List.of(BaseHendelse.STATUS_NY))
 				.isEmpty();
 	}
 }

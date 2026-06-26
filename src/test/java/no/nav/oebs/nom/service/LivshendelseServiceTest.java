@@ -1,9 +1,6 @@
 package no.nav.oebs.nom.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -85,8 +82,9 @@ class LivshendelseServiceTest {
         when(livshendelseRepository.findByHendelseIdAndHendelseOpplysningstypeAndStatusNotIn(anyString(), anyString(), anyList()))
                 .thenThrow(new RuntimeException("DB-feil under duplikatsjekk"));
 
+        LivshendelseDto dto = buildDto("hendelse-feil", List.of("12345678901"), "DOEDSFALL_V1");
         assertThrows(HendelseBehandlingException.class,
-                () -> livshendelseService.behandleHendelse(buildDto("hendelse-feil", List.of("12345678901"), "DOEDSFALL_V1")));
+                () -> livshendelseService.behandleHendelse(dto));
 
         ArgumentCaptor<Livshendelse> captor = ArgumentCaptor.forClass(Livshendelse.class);
         verify(livshendelseRepository).save(captor.capture());
@@ -98,8 +96,9 @@ class LivshendelseServiceTest {
         when(livshendelseRepository.findByHendelseIdAndHendelseOpplysningstypeAndStatusNotIn(anyString(), anyString(), anyList()))
                 .thenThrow(new RuntimeException("DB-feil"));
 
+        LivshendelseDto dto = buildDto("hendelse-feil-2", List.of("12345678901"), "NAVN_V1");
         assertThrows(HendelseBehandlingException.class,
-                () -> livshendelseService.behandleHendelse(buildDto("hendelse-feil-2", List.of("12345678901"), "NAVN_V1")));
+                () -> livshendelseService.behandleHendelse(dto));
 
         ArgumentCaptor<Livshendelse> captor = ArgumentCaptor.forClass(Livshendelse.class);
         verify(livshendelseRepository).save(captor.capture());
@@ -113,8 +112,9 @@ class LivshendelseServiceTest {
 
         LocalDateTime foerKall = LocalDateTime.now();
 
+        LivshendelseDto dto = buildDto("hendelse-retry", List.of("12345678901"), "NAVN_V1");
         assertThrows(HendelseBehandlingException.class,
-                () -> livshendelseService.behandleHendelse(buildDto("hendelse-retry", List.of("12345678901"), "NAVN_V1")));
+                () -> livshendelseService.behandleHendelse(dto));
 
         ArgumentCaptor<Livshendelse> captor = ArgumentCaptor.forClass(Livshendelse.class);
         verify(livshendelseRepository).save(captor.capture());
@@ -127,8 +127,9 @@ class LivshendelseServiceTest {
         when(livshendelseRepository.save(any(Livshendelse.class)))
                 .thenThrow(new RuntimeException("Oracle nede"));
 
+        LivshendelseDto dto = buildDto("hendelse-db-nede", List.of("12345678901"), "NAVN_V1");
         assertThrows(RuntimeException.class,
-                () -> livshendelseService.behandleHendelse(buildDto("hendelse-db-nede", List.of("12345678901"), "NAVN_V1")));
+                () -> livshendelseService.behandleHendelse(dto));
     }
 
     @Test
@@ -172,8 +173,8 @@ class LivshendelseServiceTest {
         ArgumentCaptor<Livshendelse> captor = ArgumentCaptor.forClass(Livshendelse.class);
         verify(livshendelseRepository).save(captor.capture());
         String personidenter = captor.getValue().getHendelsePersonidenter();
-        assertTrue(!personidenter.startsWith(","), "Should not start with comma");
-        assertTrue(!personidenter.endsWith(","), "Should not end with comma");
+        assertFalse(personidenter.startsWith(","), "Should not start with comma");
+        assertFalse(personidenter.endsWith(","), "Should not end with comma");
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,7 @@ class DoedsfallDtoTest {
 
     @Test
     void map_withDoedsdato_mapsDateCorrectly() {
-        LocalDate doedsdato = LocalDate.of(2023, 6, 15);
+        LocalDate doedsdato = LocalDate.of(2023, Month.JULY, 15);
         when(doedsfall.getDoedsdato()).thenReturn(doedsdato);
 
         DoedsfallDto result = DoedsfallDto.map(doedsfall);

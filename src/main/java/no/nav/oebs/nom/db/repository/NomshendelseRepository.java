@@ -2,7 +2,6 @@ package no.nav.oebs.nom.db.repository;
 
 import java.util.List;
 
-import no.nav.oebs.nom.db.entity.Livshendelse;
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

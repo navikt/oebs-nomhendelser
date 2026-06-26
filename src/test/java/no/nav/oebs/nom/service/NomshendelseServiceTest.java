@@ -105,8 +105,9 @@ class NomshendelseServiceTest {
         when(nomshendelseRepository.findByHendelseIdAndStatusNotIn(any(), any()))
                 .thenThrow(new RuntimeException("Databasefeil"));
 
+        NomshendelseDto dto = buildDto("topic-0-2", "true");
         assertThrows(HendelseBehandlingException.class,
-                () -> nomshendelseService.behandleHendelse(buildDto("topic-0-2", "true")));
+                () -> nomshendelseService.behandleHendelse(dto));
     }
 
     @Test
@@ -116,8 +117,9 @@ class NomshendelseServiceTest {
 
         ArgumentCaptor<NomsHendelse> captor = ArgumentCaptor.forClass(NomsHendelse.class);
 
+        NomshendelseDto dto = buildDto("topic-0-3", "true");
         assertThrows(HendelseBehandlingException.class,
-                () -> nomshendelseService.behandleHendelse(buildDto("topic-0-3", "true")));
+                () -> nomshendelseService.behandleHendelse(dto));
 
         verify(nomshendelseRepository).save(captor.capture());
         assertEquals(BaseHendelse.STATUS_RETRY, captor.getValue().getStatus());
@@ -129,8 +131,9 @@ class NomshendelseServiceTest {
                 .thenThrow(new RuntimeException("Feil"));
 
         ArgumentCaptor<NomsHendelse> captor = ArgumentCaptor.forClass(NomsHendelse.class);
+        NomshendelseDto dto = buildDto("topic-0-4", "true");
         assertThrows(HendelseBehandlingException.class,
-                () -> nomshendelseService.behandleHendelse(buildDto("topic-0-4", "true")));
+                () -> nomshendelseService.behandleHendelse(dto));
 
         verify(nomshendelseRepository).save(captor.capture());
         assertEquals(5, captor.getValue().getRetryTeller());
@@ -141,14 +144,15 @@ class NomshendelseServiceTest {
         when(nomshendelseRepository.findByHendelseIdAndStatusNotIn(any(), any()))
                 .thenThrow(new RuntimeException("Feil"));
 
-        LocalDateTime tidspunktFørKall = LocalDateTime.now();
+        LocalDateTime timeBeforeCall = LocalDateTime.now();
         ArgumentCaptor<NomsHendelse> captor = ArgumentCaptor.forClass(NomsHendelse.class);
+        NomshendelseDto dto = buildDto("topic-0-5", "true");
         assertThrows(HendelseBehandlingException.class,
-                () -> nomshendelseService.behandleHendelse(buildDto("topic-0-5", "true")));
+                () -> nomshendelseService.behandleHendelse(dto));
 
         verify(nomshendelseRepository).save(captor.capture());
         assertNotNull(captor.getValue().getRetryTidspunkt());
-        assertTrue(captor.getValue().getRetryTidspunkt().isAfter(tidspunktFørKall));
+        assertTrue(captor.getValue().getRetryTidspunkt().isAfter(timeBeforeCall));
     }
 
     @Test
@@ -157,8 +161,9 @@ class NomshendelseServiceTest {
                 .thenThrow(new RuntimeException("Oracle nede"));
 
         // Når DB er nede ved første save, skal hendelsen rulles tilbake til topic (ikke RETRY)
-        assertThrows(RuntimeException.class,
-                () -> nomshendelseService.behandleHendelse(buildDto("topic-0-6", "true")));
+        NomshendelseDto dto = buildDto("topic-0-6", "true");
+                assertThrows(RuntimeException.class,
+                () -> nomshendelseService.behandleHendelse(dto));
     }
 
     @Test

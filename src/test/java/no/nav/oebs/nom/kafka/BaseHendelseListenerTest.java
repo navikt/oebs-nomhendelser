@@ -88,11 +88,11 @@ class BaseHendelseListenerTest {
 
     @Test
     void logToNomsLogg_successStatus_savesLogEntryWithCorrectFields() {
-        ConsumerRecord<String, String> record = buildConsumerRecord("nom.topic", 2, 42L, "key");
+        ConsumerRecord<String, String> conRecord = buildConsumerRecord("nom.topic", 2, 42L, "key");
         String korrelasjonId = "korr-test-123";
         long startTime = System.currentTimeMillis();
 
-        listener.testLogToLogg(korrelasjonId, STATUS_OK, startTime, "{hendelse:true}", record, null);
+        listener.testLogToLogg(korrelasjonId, STATUS_OK, startTime, "{hendelse:true}", conRecord, null);
 
         ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -111,10 +111,10 @@ class BaseHendelseListenerTest {
 
     @Test
     void logToLogg_errorStatus_savesWithExceptionMessage() {
-        ConsumerRecord<String, String> record = buildConsumerRecord("nom.topic", 0, 1L, "key");
+        ConsumerRecord<String, String> conRecord = buildConsumerRecord("nom.topic", 0, 1L, "key");
         RuntimeException feil = new RuntimeException("Behandlingsfeil");
 
-        listener.testLogToLogg("id", STATUS_ERROR, System.currentTimeMillis(), "{}", record, feil);
+        listener.testLogToLogg("id", STATUS_ERROR, System.currentTimeMillis(), "{}", conRecord, feil);
 
         ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -124,19 +124,19 @@ class BaseHendelseListenerTest {
 
     @Test
     void logToLogg_repositoryThrowsException_exceptionIsCaught() {
-        ConsumerRecord<String, String> record = buildConsumerRecord("nom.topic", 0, 0L, "key");
+        ConsumerRecord<String, String> conRecord = buildConsumerRecord("nom.topic", 0, 0L, "key");
         when(loggRepository.save(any())).thenThrow(new RuntimeException("DB nede"));
 
         assertDoesNotThrow(() ->
-                listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null));
+                listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", conRecord, null));
     }
 
     @Test
     void logToLogg_kafkaKeyExceedsMaxLength_isTrimmedToMaxLength() {
         String longKey = "x".repeat(Logg.MAX_KAFKA_KEY_LEN + 50);
-        ConsumerRecord<String, String> record = buildConsumerRecord("topic", 0, 0L, longKey);
+        ConsumerRecord<String, String> conRecord = buildConsumerRecord("topic", 0, 0L, longKey);
 
-        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
+        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", conRecord, null);
 
         ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -145,9 +145,9 @@ class BaseHendelseListenerTest {
 
     @Test
     void logToLogg_nullKafkaKey_savedWithoutError() {
-        ConsumerRecord<String, String> record = buildConsumerRecord("topic", 0, 0L, null);
+        ConsumerRecord<String, String> conRecord = buildConsumerRecord("topic", 0, 0L, null);
 
-        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", record, null);
+        listener.testLogToLogg("id", STATUS_OK, System.currentTimeMillis(), "{}", conRecord, null);
 
         ArgumentCaptor<Logg> captor = ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -174,8 +174,8 @@ class BaseHendelseListenerTest {
         }
 
         void testLogToLogg(String korrelasjonId, int status, long startTime,
-                String message, ConsumerRecord<?, ?> record, Exception exception) {
-            logToLogg(korrelasjonId, status, startTime, message, record, exception);
+                String message, ConsumerRecord<?, ?> conRecord, Exception exception) {
+            logToLogg(korrelasjonId, status, startTime, message, conRecord, exception);
         }
     }
 }

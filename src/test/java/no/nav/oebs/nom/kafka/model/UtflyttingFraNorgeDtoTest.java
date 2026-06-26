@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.apache.avro.util.Utf8;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class UtflyttingFraNorgeDtoTest {
 
     @Test
     void map_withAllFields_mapsAllFieldsCorrectly() {
-        LocalDate utflyttingsdato = LocalDate.of(2022, 9, 1);
+        LocalDate utflyttingsdato = LocalDate.of(2022, Month.SEPTEMBER, 1);
         when(utflyttingFraNorge.getTilflyttingsland()).thenReturn(new Utf8("DEU"));
         when(utflyttingFraNorge.getTilflyttingsstedIUtlandet()).thenReturn(new Utf8("Berlin"));
         when(utflyttingFraNorge.getUtflyttingsdato()).thenReturn(utflyttingsdato);
