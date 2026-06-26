@@ -1,8 +1,5 @@
 package no.nav.oebs.nom.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +8,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.oebs.nom.db.entity.NomsHendelse;
 import tools.jackson.databind.json.JsonMapper;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class NomshendelseServiceBaseTest {
@@ -27,7 +26,7 @@ class NomshendelseServiceBaseTest {
 
     @Test
     void addHendelseOebsToEntity_trueBooleanString_setsStatusTrueInJson() {
-        NomsHendelse hendelse = buildHendelse("true", "12345678901");
+        NomsHendelse hendelse = buildHendelse("true");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
 
@@ -38,7 +37,7 @@ class NomshendelseServiceBaseTest {
 
     @Test
     void addHendelseOebsToEntity_falseBooleanString_setsStatusFalseInJson(){
-        NomsHendelse hendelse = buildHendelse("false", "12345678901");
+        NomsHendelse hendelse = buildHendelse("false");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
 
@@ -49,7 +48,7 @@ class NomshendelseServiceBaseTest {
     @Test
     void addHendelseOebsToEntity_invalidBooleanString_setsStatusFalse() {
         // Boolean.parseBoolean returns false for anything other than "true"
-        NomsHendelse hendelse = buildHendelse("ugyldig_verdi", "12345678901");
+        NomsHendelse hendelse = buildHendelse("ugyldig_verdi");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
 
@@ -58,7 +57,7 @@ class NomshendelseServiceBaseTest {
 
     @Test
     void addHendelseOebsToEntity_includesPersonalNumberInJson()  {
-        NomsHendelse hendelse = buildHendelse("true", "12345678901");
+        NomsHendelse hendelse = buildHendelse("true");
 
         serviceBase.addHendelseOebsToEntity(hendelse);
 
@@ -68,16 +67,16 @@ class NomshendelseServiceBaseTest {
 
     @Test
     void addHendelseOebsToEntity_overwritesOriginalEventField() {
-        NomsHendelse hendelse = buildHendelse("true", "12345678901");
+        NomsHendelse hendelse = buildHendelse("true");
         String opprinneligVerdi = hendelse.getHendelse();
 
         serviceBase.addHendelseOebsToEntity(hendelse);
 
-        assertTrue(!hendelse.getHendelse().equals(opprinneligVerdi),
-                "Event field should be updated with OEBS JSON");
+        assertNotEquals(hendelse.getHendelse(), opprinneligVerdi, "Event field should be updated with OEBS JSON");
     }
 
-    private NomsHendelse buildHendelse(String hendelseVerdi, String fodselsnr) {
+    private NomsHendelse buildHendelse(String hendelseVerdi) {
+        String fodselsnr = "12345678901";
         NomsHendelse hendelse = new NomsHendelse();
         hendelse.setHendelse(hendelseVerdi);
         hendelse.setHendelseFodselsnr(fodselsnr);

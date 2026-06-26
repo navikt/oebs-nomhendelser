@@ -59,7 +59,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_newerEventExistsForSamePersonalNumber_setsStatusReplaced() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 eq("12345678901"), eq(1L), any()))
                 .thenReturn(List.of(new NomsHendelse()));
@@ -71,7 +71,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_noNewerEvent_setsStatusProcessed() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenReturn(List.of());
@@ -83,7 +83,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_noNewerEvent_decrementsRetryCount() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenReturn(List.of());
@@ -95,7 +95,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_noNewerEvent_setsCorrelationIdFromMdc() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenReturn(List.of());
@@ -107,22 +107,22 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_exceptionWithPositiveRetryCount_setsNewRetryTimestamp() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenThrow(new RuntimeException("Databasefeil"));
 
-        LocalDateTime tidspunktFørKall = LocalDateTime.now();
+        LocalDateTime timeBeforeCall = LocalDateTime.now();
         retryService.retryHendelse(hendelse);
 
         assertNotNull(hendelse.getRetryTidspunkt());
-        assertTrue(hendelse.getRetryTidspunkt().isAfter(tidspunktFørKall),
+        assertTrue(hendelse.getRetryTidspunkt().isAfter(timeBeforeCall),
                 "RetryTimestamp should be set in the future");
     }
 
     @Test
     void retryHendelse_exceptionWithZeroRetryCount_setsStatusFailed() {
-        NomsHendelse hendelse = buildHendelse(1L, 0);
+        NomsHendelse hendelse = buildHendelse( 0);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenThrow(new RuntimeException("Feil"));
@@ -134,7 +134,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_exceptionWithNegativeRetryCount_setsStatusFailed() {
-        NomsHendelse hendelse = buildHendelse(1L, -1);
+        NomsHendelse hendelse = buildHendelse( -1);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenThrow(new RuntimeException("Feil"));
@@ -146,7 +146,7 @@ class NomshendelseRetryServiceTest {
 
     @Test
     void retryHendelse_exception_appendsErrorInformation() {
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         hendelse.setFeilinformasjon("Tidligere feil");
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
@@ -162,7 +162,7 @@ class NomshendelseRetryServiceTest {
     @Test
     void retryHendelse_neverThrowsException() {
         // Contract from HendelseRetryService: method must never throw exceptions
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
                 .thenThrow(new RuntimeException("Uventet feil"));
@@ -173,7 +173,7 @@ class NomshendelseRetryServiceTest {
     @Test
     void retryHendelse_replacedByNewerEvent_setsStatusReplaced() {
         // Verify that status is set to REPLACED — not RETRY
-        NomsHendelse hendelse = buildHendelse(1L, 3);
+        NomsHendelse hendelse = buildHendelse( 3);
         hendelse.setStatus(STATUS_RETRY);
         when(nomshendelseRepository.findByHendelseFodselsnrAndIdGreaterThanAndStatusNotIn(
                 any(), any(), any()))
@@ -184,9 +184,9 @@ class NomshendelseRetryServiceTest {
         assertEquals(STATUS_ERSTATTET, hendelse.getStatus());
     }
 
-    private NomsHendelse buildHendelse(Long id, int retryTeller) {
+    private NomsHendelse buildHendelse( int retryTeller) {
         NomsHendelse hendelse = new NomsHendelse();
-        hendelse.setId(id);
+        hendelse.setId(1L);
         hendelse.setRetryTeller(retryTeller);
         hendelse.setHendelseFodselsnr("12345678901");
         hendelse.setHendelse("true");

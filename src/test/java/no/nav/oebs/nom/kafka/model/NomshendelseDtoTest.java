@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,7 @@ class NomshendelseDtoTest {
 
     @Test
     void builder_withAllFields_setsAllFields() {
-        LocalDateTime timestamp = LocalDateTime.of(2024, 1, 15, 10, 30);
+        LocalDateTime timestamp = LocalDateTime.of(2024, Month.JANUARY, 15, 10, 30);
 
         NomshendelseDto dto = NomshendelseDto.builder()
                 .hendelseId("topic-0-42")

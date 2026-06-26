@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.avro.util.Utf8;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,37 +63,37 @@ class LivshendelseListenerTest {
 
     @Test
     void listen_validHendelse_callsBehandleHendelse() {
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
         verify(livshendelseService).behandleHendelse(any(LivshendelseDto.class));
     }
 
     @Test
     void listen_hendelseBehandlingException_doesNotRethrow() {
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
         doThrow(new HendelseBehandlingException(new RuntimeException("behandlingsfeil")))
                 .when(livshendelseService).behandleHendelse(any());
 
-        assertDoesNotThrow(() -> listener.listen(personhendelse, record));
+        assertDoesNotThrow(() -> listener.listen(personhendelse, conRecord));
     }
 
     @Test
     void listen_unexpectedException_rethrowsException() {
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
         doThrow(new RuntimeException("Uventet feil"))
                 .when(livshendelseService).behandleHendelse(any());
 
-        assertThrows(RuntimeException.class, () -> listener.listen(personhendelse, record));
+        assertThrows(RuntimeException.class, () -> listener.listen(personhendelse, conRecord));
     }
 
     @Test
     void listen_debugModeFalse_doesNotLogToLogg() {
         ReflectionTestUtils.setField(listener, "isDebugMode", false);
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
         verify(loggRepository, never()).save(any());
     }
@@ -101,9 +102,9 @@ class LivshendelseListenerTest {
     void listen_debugModeTrue_logsToLogg() {
         ReflectionTestUtils.setField(listener, "isDebugMode", true);
         when(personhendelse.toString()).thenReturn("personhendelse-debug-string");
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
         verify(loggRepository).save(any(Logg.class));
     }
@@ -112,9 +113,9 @@ class LivshendelseListenerTest {
     void listen_debugModeTrueWithSuccessfulProcessing_logsStatusOk() {
         ReflectionTestUtils.setField(listener, "isDebugMode", true);
         when(personhendelse.toString()).thenReturn("personhendelse-string");
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
         org.mockito.ArgumentCaptor<Logg> captor = org.mockito.ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -125,11 +126,11 @@ class LivshendelseListenerTest {
     void listen_debugModeTrueWithHendelseBehandlingException_logsStatusError() {
         ReflectionTestUtils.setField(listener, "isDebugMode", true);
         when(personhendelse.toString()).thenReturn("personhendelse-string");
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
         doThrow(new HendelseBehandlingException(new RuntimeException("feil")))
                 .when(livshendelseService).behandleHendelse(any());
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
         org.mockito.ArgumentCaptor<Logg> captor = org.mockito.ArgumentCaptor.forClass(Logg.class);
         verify(loggRepository).save(captor.capture());
@@ -138,23 +139,23 @@ class LivshendelseListenerTest {
 
     @Test
     void listen_clearsCorrelationIdFromMdcAfterProcessing() {
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
-        assertEquals(null, MDC.get(MdcOperations.MDC_CORRELATION_ID),
+        Assertions.assertNull(MDC.get(MdcOperations.MDC_CORRELATION_ID),
                 "Correlation ID should be removed from MDC after processing");
     }
 
     @Test
     void listen_clearsCorrelationIdFromMdcEvenOnHendelseBehandlingException() {
-        ConsumerRecord<String, Personhendelse> record = buildRecord("pdl-topic", 0, 1L);
+        ConsumerRecord<String, Personhendelse> conRecord = buildRecord();
         doThrow(new HendelseBehandlingException(new RuntimeException("feil")))
                 .when(livshendelseService).behandleHendelse(any());
 
-        listener.listen(personhendelse, record);
+        listener.listen(personhendelse, conRecord);
 
-        assertEquals(null, MDC.get(MdcOperations.MDC_CORRELATION_ID));
+        Assertions.assertNull(MDC.get(MdcOperations.MDC_CORRELATION_ID));
     }
 
     private void configurePersonhendelse() {
@@ -176,8 +177,7 @@ class LivshendelseListenerTest {
         when(personhendelse.getBostedsadresse()).thenReturn(null);
     }
 
-    @SuppressWarnings("unchecked")
-    private ConsumerRecord<String, Personhendelse> buildRecord(String topic, int partition, long offset) {
-        return new ConsumerRecord<>(topic, partition, offset, "key", null);
+    private ConsumerRecord<String, Personhendelse> buildRecord() {
+        return new ConsumerRecord<>("pdl-topic", 0, 1L, "key", null);
     }
 }

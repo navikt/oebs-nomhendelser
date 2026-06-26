@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.apache.avro.util.Utf8;
 import org.junit.jupiter.api.Test;
@@ -14,10 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.person.pdl.leesah.common.adresse.Postboksadresse;
-import no.nav.person.pdl.leesah.common.adresse.PostadresseIFrittFormat;
 import no.nav.person.pdl.leesah.common.adresse.UtenlandskAdresse;
-import no.nav.person.pdl.leesah.common.adresse.UtenlandskAdresseIFrittFormat;
-import no.nav.person.pdl.leesah.common.adresse.Vegadresse;
 import no.nav.person.pdl.leesah.kontaktadresse.Kontaktadresse;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,8 +31,8 @@ class KontaktadresseDtoTest {
 
     @Test
     void map_withDatesAndType_mapsDatesAndTypeCorrectly() {
-        LocalDate fraOgMed = LocalDate.of(2020, 1, 1);
-        LocalDate tilOgMed = LocalDate.of(2025, 12, 31);
+        LocalDate fraOgMed = LocalDate.of(2020, Month.JANUARY, 1);
+        LocalDate tilOgMed = LocalDate.of(2025, Month.DECEMBER, 31);
 
         when(kontaktadresse.getGyldigFraOgMed()).thenReturn(fraOgMed);
         when(kontaktadresse.getGyldigTilOgMed()).thenReturn(tilOgMed);

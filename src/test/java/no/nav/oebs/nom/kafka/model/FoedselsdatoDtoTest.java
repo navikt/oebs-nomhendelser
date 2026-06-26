@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,7 @@ class FoedselsdatoDtoTest {
 
     @Test
     void map_withAllFields_mapsAllFieldsCorrectly() {
-        LocalDate dato = LocalDate.of(1985, 8, 10);
+        LocalDate dato = LocalDate.of(1985, Month.AUGUST, 10);
         when(foedselsdato.getFoedselsaar()).thenReturn(1985);
         when(foedselsdato.getFoedselsdato()).thenReturn(dato);
 

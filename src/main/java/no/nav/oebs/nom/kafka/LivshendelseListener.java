@@ -25,7 +25,7 @@ public class LivshendelseListener extends BaseHendelseListener {
 	@Value("${app.kafka.debug-mode}")
 	private boolean isDebugMode;
 
-	private LivshendelseService livshendelseService;
+	private final LivshendelseService livshendelseService;
 
 	public LivshendelseListener(LoggRepository pdlLoggRepository,
                                 LivshendelseService livshendelseService) {
@@ -51,7 +51,6 @@ public class LivshendelseListener extends BaseHendelseListener {
 		String korrelasjonId = generateAndSetCorrelationId();
 		int status = STATUS_OK;
 		Exception exception = null;
-		// boolean acceptedByFilter = false;
 
 		try {
 			LivshendelseDto livshendelseDto = LivshendelseDto.map(personhendelse);

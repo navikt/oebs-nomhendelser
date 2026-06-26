@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.apache.avro.util.Utf8;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class NavnDtoTest {
 
     @Test
     void map_withAllFields_mapsAllFieldsCorrectly() {
-        LocalDate gyldigFraOgMed = LocalDate.of(2020, 1, 1);
+        LocalDate gyldigFraOgMed = LocalDate.of(2020, Month.JANUARY, 1);
         OriginaltNavn originaltNavn = mock(OriginaltNavn.class);
         when(originaltNavn.getFornavn()).thenReturn(new Utf8("Ola"));
         when(originaltNavn.getMellomnavn()).thenReturn(null);

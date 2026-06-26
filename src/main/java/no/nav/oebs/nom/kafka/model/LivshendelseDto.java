@@ -9,7 +9,6 @@ import no.nav.person.pdl.leesah.Personhendelse;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Klasse for en intern representasjon av en mottatt livshendelse-melding fra Kafka. Brukes primært for å lage et gyldig
@@ -54,12 +53,6 @@ public class LivshendelseDto {
 
 	private NavnDto navn;
 
-	// private SikkerhetstiltakDto sikkerhetstiltak;
-
-	// private StatsborgerskapDto statsborgerskap;
-
-	// private TelefonnummerDto telefonnummer;
-
 	private KontaktadresseDto kontaktadresse;
 
 	private BostedsadresseDto bostedsadresse;
@@ -71,7 +64,7 @@ public class LivshendelseDto {
 		return LivshendelseDto.builder() //
 				.hendelseId(personhendelse.getHendelseId().toString()) //
 				.personidenter(
-						personhendelse.getPersonidenter().stream().map(CharSequence::toString).collect(Collectors.toList())) //
+						personhendelse.getPersonidenter().stream().map(CharSequence::toString).toList()) //
 				.master(personhendelse.getMaster().toString()) //
 				.opprettet(personhendelse.getOpprettet().atZone(ZoneId.systemDefault())) //
 				.opplysningstype(personhendelse.getOpplysningstype().toString()) //
@@ -79,7 +72,6 @@ public class LivshendelseDto {
 				.tidligereHendelseId(ModelUtils.getAsString(personhendelse.getTidligereHendelseId())) //
 				.adressebeskyttelse(AdressebeskyttelseDto.map(personhendelse.getAdressebeskyttelse())) //
 				.doedsfall(DoedsfallDto.map(personhendelse.getDoedsfall())) //
-				// .foedsel(FoedselDto.map(personhendelse.getFoedsel())) //
 				.foedselsdato(FoedselsdatoDto.map(personhendelse.getFoedselsdato())) //
 				.utflyttingFraNorge(UtflyttingFraNorgeDto.map(personhendelse.getUtflyttingFraNorge())) //
 				.innflyttingTilNorge(InnflyttingTilNorgeDto.map(personhendelse.getInnflyttingTilNorge())) //

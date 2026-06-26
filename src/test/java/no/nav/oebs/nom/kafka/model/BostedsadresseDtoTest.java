@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.apache.avro.util.Utf8;
 import org.junit.jupiter.api.Test;
@@ -30,9 +31,9 @@ class BostedsadresseDtoTest {
 
     @Test
     void map_withDatesAndCoAdressenavn_mapsDatesCorrectly() {
-        LocalDate angittFlyttedato = LocalDate.of(2021, 5, 1);
-        LocalDate fraOgMed = LocalDate.of(2021, 5, 1);
-        LocalDate tilOgMed = LocalDate.of(2030, 12, 31);
+        LocalDate angittFlyttedato = LocalDate.of(2021, Month.MAY, 1);
+        LocalDate fraOgMed = LocalDate.of(2021, Month.MAY, 1);
+        LocalDate tilOgMed = LocalDate.of(2030, Month.DECEMBER, 31);
 
         when(bostedsadresse.getAngittFlyttedato()).thenReturn(angittFlyttedato);
         when(bostedsadresse.getGyldigFraOgMed()).thenReturn(fraOgMed);

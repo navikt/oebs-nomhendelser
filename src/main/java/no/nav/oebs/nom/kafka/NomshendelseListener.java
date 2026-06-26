@@ -43,7 +43,6 @@ public class NomshendelseListener extends BaseHendelseListener {
 		String korrelasjonId = generateAndSetCorrelationId();
 		int status = STATUS_OK;
 		Exception exception = null;
-		//boolean acceptedByFilter = false;
 
 		try {
 			NomshendelseDto nomshendelseDto = createNomshendelseDto(hendelseAsJson, consumerRecord);
