@@ -57,6 +57,11 @@ Failed events are retried automatically via a scheduled job. Retry attempts and 
 | Max retry attempts | 2880 |
 | Backoff period | 60 000 ms (1 minute) |
 
+### OEBS PL/SQL functionality
+
+Install script for PL/SQLcan be found in these two files in the oebs repository
+[install_OEBS-593.sh](https://github.com/navikt/oebs/blob/main/install/install_OEBS-593.sh) and
+[install_oebs_786_nom.sh](https://github.com/navikt/oebs/blob/main/install/install_oebs_786_nom.sh). 
 ---
 
 ## Dependencies
@@ -69,7 +74,7 @@ Failed events are retried automatically via a scheduled job. Retry attempts and 
 | **NAIS platform** | Container orchestration, secrets management, and deployment |
 
 ### Consumers
-This service is a pure consumer — it does not expose any APIs to other services.
+This service is a pure consumer — it does not expose any data to other services.
 
 ---
 
