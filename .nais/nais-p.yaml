@@ -36,6 +36,12 @@ spec:
     path: /actuator/prometheus
   kafka:
     pool: nav-prod
+
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+
   observability:
     autoInstrumentation:
       enabled: true
