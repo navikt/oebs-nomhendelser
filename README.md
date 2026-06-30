@@ -1,5 +1,9 @@
 # oebs-nomhendelser
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-nomhendelser&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-nomhendelser)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-nomhendelser&metric=coverage)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-nomhendelser)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_oebs-nomhendelser&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=navikt_oebs-nomhendelser)  
+
 Kafka consumer service that processes employee shielding events from NOM and life events from PDL, and stores them in the OEBS Oracle database.
 The service runs in sikker sone (FSS) and consumes two Kafka topics:
 - **NOM hendelser** (`nom.skjermede-personer-status-v1`) — status changes for shielded NAV employees
@@ -33,10 +37,10 @@ Deployment order: **t1 → q1 → prod**. Production deployment requires manual 
 
 ### Kafka topics
 
-| Topic | Format | Description |
-|-------|--------|-------------|
-| `nom.skjermede-personer-status-v1` | JSON | NOM hendelser — status changes for shielded NAV employees |
-| `pdl.leesah-v1` | Avro (`Personhendelse`) | Livshendelser from PDL — life events such as address changes, deaths, and births |
+| Topic | Format |  Get access                                                                                                                                                        |       Description                                                                                        |
+|-------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| `nom.skjermede-personer-status-v1` | JSON | Ask for access in [skjermingsløsningen slack channel](https://nav-it.slack.com/archives/C01E3K0J6QH)                                                                 | NOM hendelser — status changes for shielded NAV employees |
+| `pdl.leesah-v1` | Avro (`Personhendelse`) | Ask for access in [pdl slack channel](https://nav-it.slack.com/archives/C84H68ESC)  | Livshendelser from PDL — life events such as address changes, deaths, and births| 
 
 ### Event processing
 
