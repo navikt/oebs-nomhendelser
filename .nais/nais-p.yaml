@@ -36,10 +36,10 @@ spec:
     path: /actuator/prometheus
   kafka:
     pool: nav-prod
-  azure:
-    application:
+  observability:
+    autoInstrumentation:
       enabled: true
-      tenant: nav.no
+      runtime: java
 
   ingresses:
     - "https://oebs-nomhendelser.intern.nav.no"
