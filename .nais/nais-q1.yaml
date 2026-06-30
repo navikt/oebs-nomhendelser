@@ -26,7 +26,7 @@ spec:
     timeout: 10
   resources:
     limits:
-      cpu: 761m
+      cpu: 768m
       memory: 768Mi
     requests:
       cpu: 200m
