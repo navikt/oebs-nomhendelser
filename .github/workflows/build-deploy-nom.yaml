@@ -68,7 +68,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
         env:
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais-t1.yaml
+          RESOURCE: .nais/nais-t1-old.yaml
           VAR: image=${{ needs.build.outputs.image }}
 
   deploy-q1:
@@ -85,7 +85,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
         env:
           CLUSTER: dev-fss
-          RESOURCE: .nais/nais-q1.yaml
+          RESOURCE: .nais/nais-q1-old.yaml
           VAR: image=${{ needs.build.outputs.image }}
 
   deploy-prod:
@@ -104,4 +104,38 @@ jobs:
         env:
           CLUSTER: prod-fss
           RESOURCE: .nais/nais-p.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+
+  deploy-t1-new:
+    name: Deploy personhendelse-consumer-oebs-t1
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+      - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
+        env:
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-t1.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+
+  deploy-q1-new:
+    name: Deploy personhendelse-consumer-oebs-q1
+    needs: build
+    if: github.event_name != 'pull_request' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+      - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
+        env:
+          CLUSTER: dev-fss
+          RESOURCE: .nais/nais-q1.yaml
           VAR: image=${{ needs.build.outputs.image }}
