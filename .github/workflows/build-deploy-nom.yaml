@@ -119,7 +119,7 @@ jobs:
 
       - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
         env:
-          CLUSTER: dev-fss
+          CLUSTER: dev-gcp
           RESOURCE: .nais/nais-t1.yaml
           VAR: image=${{ needs.build.outputs.image }}
 
@@ -136,6 +136,6 @@ jobs:
 
       - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b
         env:
-          CLUSTER: dev-fss
+          CLUSTER: dev-gcp
           RESOURCE: .nais/nais-q1.yaml
           VAR: image=${{ needs.build.outputs.image }}
