@@ -4,8 +4,6 @@ server:
 spring:
   application:
     name : ${NAIS_APP_NAME}
-  profiles:
-    active: nais
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
     username: ${OEBS_USERNAME}
