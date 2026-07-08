@@ -40,7 +40,7 @@ spring:
           location: ${KAFKA_KEYSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
         truststore:
-          type: PKCS12 #JKS
+          type: JKS
           location: ${KAFKA_TRUSTSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
       schema:
@@ -57,7 +57,7 @@ app:
   kafka:
     debug-mode: true
     nomshendelse:
-      topic: nom.skjermede-personer-status-v1
+      topic: nais-verification.kafka-canary-dev-gcp
       auto-startup: true
     livshendelse:
       topic: pdl.leesah-v1
