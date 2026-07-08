@@ -16,15 +16,15 @@
         </encoder>
     </appender>
 
-    <springProfile name="nais">
-        <root level="INFO">
+    <springProfile name="!local">
+        <logger name="ROOT" level="INFO">
             <appender-ref ref="stdout_json" />
-        </root>
+        </logger>
     </springProfile>
 
-
     <springProfile name="local">
-        <include resource="org/springframework/boot/logging/logback/base.xml" />
-        <logger name="no.nav.oebs.nom" level="INFO" />
+        <logger name="ROOT" level="INFO">
+            <appender-ref ref="stdout_json" />
+        </logger>
     </springProfile>
 </configuration>
