@@ -24,14 +24,11 @@ spec:
       value: TRACE
     - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_KAFKA
       value: DEBUG
-    # Temporary canary verification (docs.nais.io Kafka troubleshooting).
-    # Uses public canary topic to verify auth/network independent of domain topic ACLs.
+    # Keep listeners explicitly enabled so one can be toggled off during isolation tests.
     - name: APP_KAFKA_NOMSHENDELSE_AUTO_STARTUP
       value: "true"
-    - name: APP_KAFKA_NOMSHENDELSE_TOPIC
-      value: nais-verification.kafka-canary-dev-gcp
     - name: APP_KAFKA_LIVSHENDELSE_AUTO_STARTUP
-      value: "false"
+      value: "true"
 
   replicas:
     min: 1
