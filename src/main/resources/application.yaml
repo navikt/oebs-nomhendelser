@@ -40,7 +40,7 @@ spring:
           location: ${KAFKA_KEYSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
         truststore:
-          type: PKCS12 #JKS
+          type: JKS
           location: ${KAFKA_TRUSTSTORE_PATH}
           password: ${KAFKA_CREDSTORE_PASSWORD}
       schema:
