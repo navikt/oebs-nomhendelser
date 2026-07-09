@@ -29,9 +29,6 @@ spec:
       value: "true"
     - name: APP_KAFKA_LIVSHENDELSE_AUTO_STARTUP
       value: "true"
-    # Optional group override for coordinator ACL debugging:
-    # - name: SPRING_KAFKA_CONSUMER_GROUP_ID
-    #   value: oebs-nomhendelser-t1
 
   replicas:
     min: 1
