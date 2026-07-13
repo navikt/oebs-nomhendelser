@@ -57,10 +57,10 @@ app:
   kafka:
     debug-mode: true
     nomshendelse:
-      topic: nais-verification.kafka-canary-dev-gcp
+      topic: nom.skjermede-personer-status-v1
       auto-startup: true
     livshendelse:
-      topic: nais-verification.kafka-canary-dev-gcp
+      topic: pdl.leesah-v1
     retry-max-attempts: 2880
     retry-backoff-period-ms: 60000
     authorization-exception-retry-interval-secs: 60
